@@ -21,6 +21,17 @@
     <a class="nav-link" href="sondage.html" data-i18n="sondage">Sondage</a>
     <a class="nav-link nav-premium" href="premium.html">✦ Premium</a>
   </div>
+  <div class="pays-selector" id="paysSelector">
+    <button class="pays-btn" onclick="togglePaysDropdown(event)">
+      <span id="pays-flag">🇫🇷</span>
+      <span id="pays-nom" style="font-size:.65rem;letter-spacing:.06em">France</span>
+      <span style="font-size:.55rem;opacity:.6">▾</span>
+    </button>
+    <div class="pays-dropdown" id="paysDropdown" style="display:none">
+      <p style="font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.4);padding:.5rem .75rem .25rem;font-weight:500">Pays / Langue</p>
+      <select size="8" class="pays-select-list" id="paysSelectList" onchange="setPays(this.value)"></select>
+    </div>
+  </div>
 </div></nav>
 
 <div class="ad-banner"><span class="ad-label">Publicité</span><div class="ad-slot ad-slot-728">Google AdSense — 728×90</div></div>

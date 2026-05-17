@@ -614,25 +614,18 @@ window._PAYS_NOM = (PAYS_CONFIG[window._PAYS_CODE] || PAYS_CONFIG['FR']).pays_re
 //  SÉLECTEUR PAYS DANS LA NAV
 // ══════════════════════════════════════════════
 function buildPaysSelector() {
-  const current = PAYS_CONFIG[window._PAYS_CODE] || PAYS_CONFIG['FR'];
-
-  const optionsHTML = Object.entries(PAYS_CONFIG).map(([code, cfg]) =>
+  // Le HTML est déjà dans la page — on peuple juste le select
+  const sel = document.getElementById('paysSelectList');
+  if (!sel) return;
+  sel.innerHTML = Object.entries(PAYS_CONFIG).map(([code, cfg]) =>
     `<option value="${code}" ${code === window._PAYS_CODE ? 'selected' : ''}>${cfg.flag} ${cfg.nom}</option>`
   ).join('');
-
-  const el = document.createElement('div');
-  el.className = 'pays-selector';
-  el.innerHTML = `
-    <button class="pays-btn" onclick="togglePaysDropdown(event)" aria-label="Changer de pays">
-      <span id="pays-flag">${current.flag}</span>
-      <span id="pays-nom" style="font-size:.65rem;letter-spacing:.06em">${current.nom}</span>
-      <span style="font-size:.55rem;opacity:.6">▾</span>
-    </button>
-    <div class="pays-dropdown" id="paysDropdown" style="display:none">
-      <p style="font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.4);padding:.5rem .75rem .25rem;font-weight:500">Pays / Langue</p>
-      <select size="8" class="pays-select-list" onchange="setPays(this.value)">${optionsHTML}</select>
-    </div>`;
-  return el;
+  // Mettre à jour le drapeau et nom affiché
+  const cfg = PAYS_CONFIG[window._PAYS_CODE] || PAYS_CONFIG['FR'];
+  const flagEl = document.getElementById('pays-flag');
+  const nomEl = document.getElementById('pays-nom');
+  if (flagEl) flagEl.textContent = cfg.flag;
+  if (nomEl) nomEl.textContent = cfg.nom;
 }
 
 function togglePaysDropdown(e) {
@@ -690,11 +683,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const cfg = PAYS_CONFIG[window._PAYS_CODE] || PAYS_CONFIG['FR'];
   document.documentElement.dir = cfg.lang === 'ar' ? 'rtl' : 'ltr';
 
-  // Injecter le sélecteur dans la nav
-  const navInner = document.querySelector('.nav-inner');
-  if (navInner) {
-    navInner.appendChild(buildPaysSelector());
-  }
+  // Peupler le sélecteur (déjà dans le HTML de chaque page)
+  buildPaysSelector();
 
   // Détecter IP si pas de préférence sauvegardée
   if (!localStorage.getItem('pays')) {
