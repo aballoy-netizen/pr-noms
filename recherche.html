@@ -59,16 +59,7 @@
       <input type="text" id="searchInput" class="search-input" placeholder="Entrez un prénom…" autocomplete="off">
       <button class="search-btn" id="searchBtn" onclick="doSearch()">Analyser</button>
     </div>
-    <div class="quick-tags" style="margin-top:.75rem">
-      <button class="qtag" onclick="qs('Alma')">Alma</button>
-      <button class="qtag" onclick="qs('Gabriel')">Gabriel</button>
-      <button class="qtag" onclick="qs('Léonie')">Léonie</button>
-      <button class="qtag" onclick="qs('Raphaël')">Raphaël</button>
-      <button class="qtag" onclick="qs('Iris')">Iris</button>
-      <button class="qtag" onclick="qs('Malo')">Malo</button>
-      <button class="qtag" onclick="qs('Adèle')">Adèle</button>
-      <button class="qtag" onclick="qs('Théodore')">Théodore</button>
-    </div>
+    <div class="quick-tags" style="margin-top:.75rem" id="rechercheQuickTags"></div>
   </div>
 </div>
 
@@ -108,8 +99,23 @@ inp.addEventListener('keydown', e => { if (e.key === 'Enter') doSearch(); });
 
 function qs(name) { inp.value = name; doSearch(); }
 
-// Auto-search from URL
-const urlQ = getParam('q');
+// Tags dynamiques selon la langue — mis à jour au changement de pays
+function refreshRechercheQuickTags() {
+  var tagsEl = document.getElementById('rechercheQuickTags');
+  if (!tagsEl || typeof getPrenomsSuggeres !== 'function') return;
+  tagsEl.innerHTML = '';
+  getPrenomsSuggeres().forEach(function(p) {
+    var b = document.createElement('button');
+    b.className = 'qtag'; b.textContent = p;
+    b.onclick = function() { qs(p); };
+    tagsEl.appendChild(b);
+  });
+}
+refreshRechercheQuickTags();
+window.addEventListener('paysChanged', refreshRechercheQuickTags);
+
+// Auto-search from URL or localStorage
+const urlQ = getParam('q') || localStorage.getItem('lastPrenom') || '';
 if (urlQ) { inp.value = urlQ; doSearch(); }
 
 async function doSearch() {
@@ -117,10 +123,14 @@ async function doSearch() {
   if (!q) return;
   btn.disabled = true; btn.textContent = '…';
   const area = document.getElementById('mainArea');
-  showLoading(area, `Analyse de « ${q} » en cours…`);
+  showLoading(area, typeof t !== "undefined" ? t("analyse_loading") : "Analyse en cours…");
 
   try {
-    const d = await callClaude(`Tu es une encyclopédie experte des prénoms. Analyse le prénom "${q}" et réponds UNIQUEMENT en JSON valide sans markdown ni backticks:
+    const lang = window._LANG || "fr";
+    const pays = window._PAYS_NOM || "France";
+    const langNames = {fr:"français",en:"English",es:"español",pt:"português",de:"Deutsch",ar:"العربية",zh:"中文",hi:"हिन्दी",it:"italiano"};
+    const langName = langNames[lang] || "français";
+    const d = await callClaude(`Réponds UNIQUEMENT en ${langName}. Les données de popularité, classements et statistiques doivent refléter le pays "${pays}". Tu es une encyclopédie experte des prénoms. Analyse le prénom "${q}" et réponds UNIQUEMENT en JSON valide sans markdown ni backticks:
 {
   "prenom":"forme officielle",
   "genre":"féminin|masculin|mixte",
@@ -178,10 +188,11 @@ Pour personnalites: cite 4 à 6 vraies personnalités connues portant exactement
 Donne des naissances estimées plausibles en France. Sois factuel.`, 2500);
 
     renderResult(d);
+    updateNavLinks(q);
   } catch(e) {
     showError(area, e.message);
   }
-  btn.disabled = false; btn.textContent = 'Analyser';
+  btn.disabled = false; btn.textContent = typeof t !== 'undefined' ? t('analyse_btn') : 'Analyser';
 }
 
 function renderResult(d) {
