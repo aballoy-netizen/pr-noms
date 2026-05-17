@@ -614,12 +614,21 @@ window._PAYS_NOM = (PAYS_CONFIG[window._PAYS_CODE] || PAYS_CONFIG['FR']).pays_re
 //  SÉLECTEUR PAYS DANS LA NAV
 // ══════════════════════════════════════════════
 function buildPaysSelector() {
-  // Le HTML est déjà dans la page — on peuple juste le select
   const sel = document.getElementById('paysSelectList');
   if (!sel) return;
-  sel.innerHTML = Object.entries(PAYS_CONFIG).map(([code, cfg]) =>
-    `<option value="${code}" ${code === window._PAYS_CODE ? 'selected' : ''}>${cfg.flag} ${cfg.nom}</option>`
-  ).join('');
+  // Remplacer le select par une liste de boutons
+  const parent = sel.parentNode;
+  const list = document.createElement('div');
+  list.className = 'pays-list';
+  list.id = 'paysSelectList';
+  Object.entries(PAYS_CONFIG).forEach(([code, cfg]) => {
+    const btn = document.createElement('button');
+    btn.className = 'pays-list-item' + (code === window._PAYS_CODE ? ' active' : '');
+    btn.textContent = cfg.flag + ' ' + cfg.nom;
+    btn.onclick = (e) => { e.stopPropagation(); setPays(code); };
+    list.appendChild(btn);
+  });
+  parent.replaceChild(list, sel);
   // Mettre à jour le drapeau et nom affiché
   const cfg = PAYS_CONFIG[window._PAYS_CODE] || PAYS_CONFIG['FR'];
   const flagEl = document.getElementById('pays-flag');
@@ -634,7 +643,9 @@ function togglePaysDropdown(e) {
   dd.style.display = dd.style.display === 'none' ? 'block' : 'none';
 }
 
-document.addEventListener('click', () => {
+document.addEventListener('click', (e) => {
+  const selector = document.getElementById('paysSelector');
+  if (selector && selector.contains(e.target)) return; // clic dans le sélecteur → ne pas fermer
   const dd = document.getElementById('paysDropdown');
   if (dd) dd.style.display = 'none';
 });
@@ -652,6 +663,10 @@ function setPays(code) {
   const nomEl = document.getElementById('pays-nom');
   if (flagEl) flagEl.textContent = cfg.flag;
   if (nomEl) nomEl.textContent = cfg.nom;
+  // Mettre à jour l'item actif dans la liste
+  document.querySelectorAll('.pays-list-item').forEach(btn => {
+    btn.classList.toggle('active', btn.textContent.includes(cfg.nom));
+  });
   // Fermer dropdown
   const dd = document.getElementById('paysDropdown');
   if (dd) dd.style.display = 'none';
