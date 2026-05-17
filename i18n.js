@@ -614,21 +614,17 @@ window._PAYS_NOM = (PAYS_CONFIG[window._PAYS_CODE] || PAYS_CONFIG['FR']).pays_re
 //  SÉLECTEUR PAYS DANS LA NAV
 // ══════════════════════════════════════════════
 function buildPaysSelector() {
-  const sel = document.getElementById('paysSelectList');
-  if (!sel) return;
-  // Remplacer le select par une liste de boutons
-  const parent = sel.parentNode;
-  const list = document.createElement('div');
-  list.className = 'pays-list';
-  list.id = 'paysSelectList';
+  const container = document.getElementById('paysSelectList');
+  if (!container) return;
+  container.innerHTML = '';
+  container.className = 'pays-list';
   Object.entries(PAYS_CONFIG).forEach(([code, cfg]) => {
     const btn = document.createElement('button');
     btn.className = 'pays-list-item' + (code === window._PAYS_CODE ? ' active' : '');
     btn.textContent = cfg.flag + ' ' + cfg.nom;
-    btn.onclick = (e) => { e.stopPropagation(); setPays(code); };
-    list.appendChild(btn);
+    btn.onclick = () => setPays(code);
+    container.appendChild(btn);
   });
-  parent.replaceChild(list, sel);
   // Mettre à jour le drapeau et nom affiché
   const cfg = PAYS_CONFIG[window._PAYS_CODE] || PAYS_CONFIG['FR'];
   const flagEl = document.getElementById('pays-flag');
