@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Classement — Prénoms</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<nav id="nav"><div class="nav-inner">
+  <a class="logo" href="index.html">Pré<span>noms</span></a>
+  <button class="nav-burger" onclick="toggleMenu()"><span></span><span></span><span></span></button>
+  <div class="nav-links" id="navLinks">
+    <a class="nav-link" href="recherche.html">Rechercher</a>
+    <a class="nav-link" href="comparer.html">Comparer</a>
+    <a class="nav-link active" href="classement.html">Classement</a>
+    <a class="nav-link" href="tendances.html">Tendances</a>
+    <a class="nav-link" href="harmonie.html">Harmonie</a>
+    <a class="nav-link" href="sondage.html">Sondage</a>
+    <a class="nav-link nav-premium" href="premium.html">✦ Premium</a>
+  </div>
+</div></nav>
+
+<div class="ad-banner"><span class="ad-label">Publicité</span><div class="ad-slot ad-slot-728">Google AdSense — 728×90</div></div>
+
+<div class="page-header"><div class="container">
+  <div>
+    <p class="page-tag">✦ Palmarès</p>
+    <h1 class="page-title">Classement des prénoms <em>par année ou période</em></h1>
+    <p class="page-sub">Top 20 des prénoms les plus donnés en France</p>
+  </div>
+</div></div>
+
+<div style="background:var(--white);border-bottom:1px solid var(--border);padding:1.25rem 0">
+  <div class="container">
+    <div style="display:flex;flex-direction:column;gap:.85rem">
+      <div style="display:flex;gap:.75rem;flex-wrap:wrap;align-items:center">
+        <span style="font-size:.65rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);font-weight:500">Mode</span>
+        <div class="seg-ctrl">
+          <button class="seg-btn active" id="modeA" onclick="setMode('annee')">Année</button>
+          <button class="seg-btn" id="modeP" onclick="setMode('periode')">Période</button>
+        </div>
+      </div>
+      <div id="anneeRow" style="display:flex;gap:.6rem;align-items:center;flex-wrap:wrap">
+        <span style="font-size:.65rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);font-weight:500">Année</span>
+        <select id="anneeSelect" class="form-select" style="width:auto"></select>
+      </div>
+      <div id="periodeRow" style="display:none;gap:.6rem;align-items:center;flex-wrap:wrap">
+        <span style="font-size:.65rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);font-weight:500">De</span>
+        <select id="deSelect" class="form-select" style="width:auto"></select>
+        <span style="font-size:.72rem;color:var(--ink-3)">à</span>
+        <select id="aSelect" class="form-select" style="width:auto"></select>
+      </div>
+      <div style="display:flex;gap:.5rem;flex-wrap:wrap;align-items:center">
+        <span style="font-size:.65rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);font-weight:500">Genre</span>
+        <button class="qtag" id="gAll" onclick="setGenre('all')" style="background:var(--ink);color:var(--cream);border-color:var(--ink)">Tous</button>
+        <button class="qtag" id="gF" onclick="setGenre('f')">♀ Filles</button>
+        <button class="qtag" id="gM" onclick="setGenre('m')">♂ Garçons</button>
+      </div>
+      <div><button class="btn-ink" id="goBtn" onclick="doClassement()">Voir le classement →</button></div>
+    </div>
+  </div>
+</div>
+
+<div style="max-width:800px;margin:0 auto;padding:1.5rem" id="mainArea">
+  <div class="empty-state">
+    <div class="empty-icon">◉</div>
+    <h3 class="empty-title">Choisissez vos critères</h3>
+    <p class="empty-sub">Sélectionnez une année ou une période puis cliquez sur « Voir le classement »</p>
+  </div>
+</div>
+
+<script src="app.js"></script>
+<script>
+let mode = 'annee', genre = 'all';
+
+const years = [];
+for (let y = 2024; y >= 1970; y--) years.push(y);
+['anneeSelect','deSelect','aSelect'].forEach(id => {
+  const sel = document.getElementById(id);
+  years.forEach(y => { const o = document.createElement('option'); o.value = y; o.textContent = y; sel.appendChild(o); });
+});
+document.getElementById('aSelect').value = 2024;
+document.getElementById('deSelect').value = 2015;
+
+function setMode(m) {
+  mode = m;
+  document.getElementById('modeA').className = 'seg-btn' + (m === 'annee' ? ' active' : '');
+  document.getElementById('modeP').className = 'seg-btn' + (m === 'periode' ? ' active' : '');
+  document.getElementById('anneeRow').style.display = m === 'annee' ? 'flex' : 'none';
+  document.getElementById('periodeRow').style.display = m === 'periode' ? 'flex' : 'none';
+}
+
+function setGenre(g) {
+  genre = g;
+  ['gAll','gF','gM'].forEach(id => document.getElementById(id).style.cssText = '');
+  const active = { gAll: 'all', gF: 'f', gM: 'm' };
+  Object.entries(active).forEach(([id, val]) => {
+    if (val === g) document.getElementById(id).style.cssText = 'background:var(--ink);color:var(--cream);border-color:var(--ink)';
+  });
+}
+
+async function doClassement() {
+  const btn = document.getElementById('goBtn');
+  btn.disabled = true; btn.textContent = 'Chargement…';
+  const area = document.getElementById('mainArea');
+  showLoading(area, 'Génération du classement en cours…');
+
+  let periodLabel, from, to;
+  if (mode === 'annee') {
+    from = to = document.getElementById('anneeSelect').value;
+    periodLabel = `Année ${from}`;
+  } else {
+    from = Math.min(+document.getElementById('deSelect').value, +document.getElementById('aSelect').value);
+    to = Math.max(+document.getElementById('deSelect').value, +document.getElementById('aSelect').value);
+    periodLabel = `${from} – ${to}`;
+  }
+  const genreLabel = genre === 'f' ? 'féminins uniquement' : genre === 'm' ? 'masculins uniquement' : 'mixte (filles et garçons)';
+
+  try {
+    const data = await callClaude(`TOP 20 des prénoms ${genreLabel} en France pour ${from === to ? 'l\'année ' + from : 'la période ' + from + '–' + to}. UNIQUEMENT JSON sans markdown:
+{"periode":"${periodLabel}","prenoms":[{"rang":1,"prenom":"Nom","genre":"féminin|masculin","origine":"ex:latin","naissances":8500,"tendance":"montant|stable|déclinant","variation":0}]}
+Exactement 20 entrées. variation = évolution rang vs période précédente. Sois historiquement réaliste.`, 1400);
+    renderClassement(data, periodLabel);
+  } catch(e) { showError(area); }
+  btn.disabled = false; btn.textContent = 'Voir le classement →';
+}
+
+function renderClassement(data, label) {
+  const area = document.getElementById('mainArea');
+  const list = data.prenoms || [];
+  if (!list.length) { showError(area, 'Aucun résultat.'); return; }
+  const maxNb = list[0].naissances || 1;
+  const top3 = list.slice(0, 3);
+  const rest = list.slice(3);
+
+  const podiumOrder = [top3[1], top3[0], top3[2]];
+  const podClass = ['podium-2', 'podium-1', 'podium-3'];
+  const podRank = [2, 1, 3];
+
+  area.innerHTML = `
+  <div style="display:inline-block;background:var(--ink);color:var(--gold-l);font-size:.62rem;font-weight:500;letter-spacing:.12em;text-transform:uppercase;padding:.3rem .85rem;border-radius:var(--radius-pill);margin-bottom:1.25rem">✦ ${label}</div>
+  <div class="ad-slot ad-slot-728" style="margin-bottom:1.25rem;height:50px">AdSense</div>
+  <div class="podium">
+    ${podiumOrder.map((p, i) => p ? `<div class="podium-item ${podClass[i]}">
+      <span class="badge ${p.genre === 'féminin' ? 'badge-f' : 'badge-m'}" style="font-size:.55rem">${p.genre === 'féminin' ? '♀' : '♂'}</span>
+      <div class="podium-name">${p.prenom}</div>
+      <div class="podium-block"><span class="podium-rank">${podRank[i]}</span></div>
+      <div class="podium-nb">${(p.naissances || 0).toLocaleString()}</div>
+    </div>` : '').join('')}
+  </div>
+  <div>
+    ${rest.map((p, i) => {
+      const v = p.variation || 0;
+      const trendSpan = v > 0 ? `<span class="rank-trend trend-up">↑${v}</span>` : v < 0 ? `<span class="rank-trend trend-dn">↓${Math.abs(v)}</span>` : `<span class="rank-trend trend-eq">—</span>`;
+      return `<div class="rank-item" style="animation-delay:${i * .03}s" onclick="window.location.href='recherche.html?q=${p.prenom}'">
+        <span class="rank-num">${p.rang}</span>
+        <div class="rank-name-col"><div class="rank-name">${p.prenom}</div><div class="rank-origin-label">${p.origine || ''}</div></div>
+        <div class="rank-bar-col"><div class="score-bar-bg"><div class="score-bar-fill" style="width:${Math.round((p.naissances || 0) / maxNb * 100)}%"></div></div></div>
+        <span class="rank-count">${(p.naissances || 0).toLocaleString()}</span>
+        ${trendSpan}
+      </div>`;
+    }).join('')}
+  </div>
+  <div style="margin-top:1.25rem">${gateHTML('✦ Rapport Premium', 'Historique complet depuis 1900, analyse décennale, PDF à télécharger.')}</div>`;
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Premium — Prénoms</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<style>
+.plan-card { background:var(--white);border:1px solid var(--border);border-radius:var(--radius);padding:2rem;flex:1;min-width:260px;position:relative;transition:.2s }
+.plan-card:hover { box-shadow:var(--shadow-lg) }
+.plan-card.featured { border:2px solid var(--gold);background:var(--gold-pale) }
+.plan-name { font-family:var(--font-serif);font-size:1.4rem;font-weight:300;color:var(--ink);margin-bottom:.25rem }
+.plan-price { font-family:var(--font-serif);font-size:2.5rem;font-weight:300;color:var(--ink);margin:.75rem 0 .2rem }
+.plan-period { font-size:.78rem;color:var(--ink-3);margin-bottom:1.25rem }
+.plan-feat { font-size:.82rem;color:var(--ink-2);padding:.3rem 0;border-bottom:1px solid var(--cream-2);display:flex;gap:.5rem;align-items:flex-start }
+.plan-feat:last-of-type { border-bottom:none }
+.plan-feat-icon { color:var(--gold);flex-shrink:0;margin-top:.05rem }
+.plan-feat-off { color:var(--ink-4) }
+.plan-feat-off .plan-feat-icon { color:var(--border) }
+.featured-badge { position:absolute;top:-1px;left:50%;transform:translateX(-50%);background:var(--gold);color:var(--ink);font-size:.6rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;padding:.28rem .85rem;border-radius:0 0 var(--radius-sm) var(--radius-sm) }
+.faq-item { border-bottom:1px solid var(--border);padding:1rem 0 }
+.faq-q { font-size:.92rem;font-weight:500;color:var(--ink);cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:.5rem }
+.faq-a { font-size:.85rem;color:var(--ink-3);line-height:1.7;margin-top:.6rem;display:none }
+.faq-item.open .faq-a { display:block }
+.faq-item.open .faq-arrow { transform:rotate(180deg) }
+.faq-arrow { transition:.2s;flex-shrink:0 }
+</style>
+</head>
+<body>
+
+<nav id="nav"><div class="nav-inner">
+  <a class="logo" href="index.html">Pré<span>noms</span></a>
+  <button class="nav-burger" onclick="toggleMenu()"><span></span><span></span><span></span></button>
+  <div class="nav-links" id="navLinks">
+    <a class="nav-link" href="recherche.html">Rechercher</a>
+    <a class="nav-link" href="comparer.html">Comparer</a>
+    <a class="nav-link" href="classement.html">Classement</a>
+    <a class="nav-link" href="tendances.html">Tendances</a>
+    <a class="nav-link" href="harmonie.html">Harmonie</a>
+    <a class="nav-link" href="sondage.html">Sondage</a>
+    <a class="nav-link nav-premium active" href="premium.html">✦ Premium</a>
+  </div>
+</div></nav>
+
+<div style="background:var(--ink);padding:4rem 1.5rem;text-align:center">
+  <div class="hero-ornament" style="animation:none">✦</div>
+  <p style="font-size:.62rem;letter-spacing:.25em;text-transform:uppercase;color:var(--gold);font-weight:500;margin-bottom:.75rem">Plans & Tarifs</p>
+  <h1 style="font-family:var(--font-serif);font-size:clamp(2rem,5vw,3.5rem);font-weight:300;color:var(--cream);line-height:1.15;margin-bottom:.75rem">Choisissez votre<br><em style="color:var(--gold-l)">plan</em></h1>
+  <p style="font-size:.9rem;color:rgba(250,248,244,.45);max-width:440px;margin:0 auto">Sans engagement, résiliable à tout moment. Essai gratuit 7 jours inclus.</p>
+</div>
+
+<div style="max-width:900px;margin:0 auto;padding:2rem 1.5rem">
+
+  <div style="display:flex;gap:1rem;flex-wrap:wrap;margin-bottom:3rem">
+    <!-- GRATUIT -->
+    <div class="plan-card">
+      <div class="plan-name">Gratuit</div>
+      <div style="font-size:.8rem;color:var(--ink-3);margin-bottom:.75rem">Pour découvrir le site</div>
+      <div class="plan-price">€0</div>
+      <div class="plan-period">pour toujours</div>
+      <div class="plan-feat"><span class="plan-feat-icon">✦</span>Recherche & analyse de prénoms</div>
+      <div class="plan-feat"><span class="plan-feat-icon">✦</span>Comparateur (jusqu'à 4 prénoms)</div>
+      <div class="plan-feat"><span class="plan-feat-icon">✦</span>Classement par année/période</div>
+      <div class="plan-feat"><span class="plan-feat-icon">✦</span>Graphiques de tendances</div>
+      <div class="plan-feat"><span class="plan-feat-icon">✦</span>Analyse harmonie basique</div>
+      <div class="plan-feat plan-feat-off"><span class="plan-feat-icon">—</span><span>Rapports PDF</span></div>
+      <div class="plan-feat plan-feat-off"><span class="plan-feat-icon">—</span><span>Historique depuis 1900</span></div>
+      <div class="plan-feat plan-feat-off"><span class="plan-feat-icon">—</span><span>Sondages illimités</span></div>
+      <button class="btn-ghost-light" style="width:100%;margin-top:1.5rem;text-align:center">Plan actuel</button>
+    </div>
+
+    <!-- PREMIUM -->
+    <div class="plan-card featured">
+      <div class="featured-badge">Recommandé</div>
+      <div class="plan-name">Premium</div>
+      <div style="font-size:.8rem;color:var(--ink-3);margin-bottom:.75rem">Pour choisir en toute sérénité</div>
+      <div class="plan-price">€4,99</div>
+      <div class="plan-period">par mois · 7 jours d'essai gratuit</div>
+      <div class="plan-feat"><span class="plan-feat-icon">✦</span>Tout du plan Gratuit</div>
+      <div class="plan-feat"><span class="plan-feat-icon">✦</span>Rapports PDF complets à télécharger</div>
+      <div class="plan-feat"><span class="plan-feat-icon">✦</span>Historique depuis 1900 (données INSEE)</div>
+      <div class="plan-feat"><span class="plan-feat-icon">✦</span>Analyse numérologique du prénom</div>
+      <div class="plan-feat"><span class="plan-feat-icon">✦</span>Compatibilité prénom + fratrie</div>
+      <div class="plan-feat"><span class="plan-feat-icon">✦</span>Sondages illimités + partage avancé</div>
+      <div class="plan-feat"><span class="plan-feat-icon">✦</span>Accès prioritaire aux nouvelles données</div>
+      <button class="btn-primary" style="width:100%;margin-top:1.5rem;text-align:center" onclick="alert('Intégration Stripe à connecter')">Commencer l'essai gratuit</button>
+      <p style="font-size:.68rem;color:var(--ink-3);text-align:center;margin-top:.5rem">Aucune carte requise pour l'essai</p>
+    </div>
+
+    <!-- ANNUEL -->
+    <div class="plan-card">
+      <div class="plan-name">Premium Annuel</div>
+      <div style="font-size:.8rem;color:var(--ink-3);margin-bottom:.75rem">La meilleure valeur</div>
+      <div class="plan-price">€39,99</div>
+      <div class="plan-period">par an · soit €3,33/mois</div>
+      <div style="display:inline-block;background:var(--gold-pale);border:1px solid var(--gold-l);color:var(--gold-deep);font-size:.62rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;padding:.2rem .65rem;border-radius:var(--radius-pill);margin-bottom:.75rem">Économisez 33%</div>
+      <div class="plan-feat"><span class="plan-feat-icon">✦</span>Tout du Premium mensuel</div>
+      <div class="plan-feat"><span class="plan-feat-icon">✦</span>Facture annuelle unique</div>
+      <div class="plan-feat"><span class="plan-feat-icon">✦</span>Support prioritaire</div>
+      <button class="btn-ink" style="width:100%;margin-top:1.5rem;text-align:center" onclick="alert('Intégration Stripe à connecter')">Choisir l'annuel</button>
+    </div>
+  </div>
+
+  <!-- FAQ -->
+  <div style="max-width:640px;margin:0 auto">
+    <h2 style="font-family:var(--font-serif);font-size:1.8rem;font-weight:300;color:var(--ink);text-align:center;margin-bottom:1.5rem">Questions fréquentes</h2>
+    <div class="faq-item" onclick="this.classList.toggle('open')">
+      <div class="faq-q">Puis-je annuler à tout moment ?<span class="faq-arrow">↓</span></div>
+      <div class="faq-a">Oui, absolument. Vous pouvez annuler votre abonnement à tout moment depuis votre compte. Vous conservez l'accès jusqu'à la fin de la période déjà payée.</div>
+    </div>
+    <div class="faq-item" onclick="this.classList.toggle('open')">
+      <div class="faq-q">L'essai gratuit nécessite-t-il une carte bancaire ?<span class="faq-arrow">↓</span></div>
+      <div class="faq-a">Non. Vous pouvez démarrer l'essai de 7 jours sans entrer d'informations de paiement. Vous ne serez facturé qu'à la fin de l'essai si vous choisissez de continuer.</div>
+    </div>
+    <div class="faq-item" onclick="this.classList.toggle('open')">
+      <div class="faq-q">Les données sont-elles fiables ?<span class="faq-arrow">↓</span></div>
+      <div class="faq-a">Les données de popularité sont des estimations basées sur les statistiques INSEE et alimentées par l'IA Claude d'Anthropic. Les données historiques Premium proviennent de l'état civil français.</div>
+    </div>
+    <div class="faq-item" onclick="this.classList.toggle('open')">
+      <div class="faq-q">Combien de prénoms puis-je analyser ?<span class="faq-arrow">↓</span></div>
+      <div class="faq-a">En version gratuite, vous pouvez analyser autant de prénoms que vous le souhaitez. Le Premium débloque les rapports PDF, l'historique étendu et les fonctionnalités avancées.</div>
+    </div>
+  </div>
+</div>
+
+<div class="ad-banner ad-banner-footer"><span class="ad-label">Publicité</span><div class="ad-slot ad-slot-970">Google AdSense — 970×90</div></div>
+
+<footer>
+  <div class="footer-inner container">
+    <div class="footer-brand"><a class="logo" href="index.html">Pré<span>noms</span></a><p>L'outil de référence pour choisir le prénom de votre enfant avec sérénité.</p></div>
+    <div class="footer-col"><h4>Outils</h4><a href="recherche.html">Recherche & Analyse</a><a href="comparer.html">Comparateur</a><a href="classement.html">Classement</a><a href="tendances.html">Tendances</a><a href="harmonie.html">Harmonie</a><a href="sondage.html">Sondage</a></div>
+    <div class="footer-col"><h4>Légal</h4><a href="#">Mentions légales</a><a href="#">Confidentialité</a><a href="#">CGU</a><a href="#">Cookies</a></div>
+    <div class="footer-col"><h4>Contact</h4><a href="#">À propos</a><a href="#">Contact</a><a href="#">Blog</a><a href="#">Presse</a></div>
+  </div>
+  <div class="footer-bottom container"><p>© 2025 Prénoms.fr — Tous droits réservés</p></div>
+</footer>
+
+<script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Harmonie — Prénoms</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<style>
+.fullname-hero { background:var(--ink);border-radius:var(--radius);padding:1.5rem;text-align:center;margin-bottom:1rem;animation:fadeUp .3s ease }
+.fullname-text { font-family:var(--font-serif);font-size:2rem;font-weight:300;color:var(--cream);line-height:1.15;margin-bottom:.4rem }
+.fullname-initials { font-family:var(--font-serif);font-size:.9rem;color:var(--gold-l);letter-spacing:.3em;text-transform:uppercase }
+.score-ring-wrap { position:relative;width:88px;height:88px;flex-shrink:0 }
+.score-ring-wrap svg { transform:rotate(-90deg) }
+.score-ring-num { position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-family:var(--font-serif);font-size:1.7rem;font-weight:300;color:var(--ink);line-height:1 }
+.syl { font-family:var(--font-serif);font-size:1.4rem;font-weight:300;color:var(--ink);background:var(--cream-2);border:1px solid var(--border);border-radius:8px;padding:.28rem .6rem;margin:.15rem }
+.syl.stress { background:var(--gold-l);border-color:var(--gold);color:var(--ink-2) }
+.alt-item { background:var(--cream-2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:.7rem .85rem;cursor:pointer;transition:.2s }
+.alt-item:hover { border-color:var(--gold);background:var(--gold-pale) }
+.alt-name { font-family:var(--font-serif);font-size:1.15rem;font-weight:300;color:var(--ink);display:block }
+.alt-score { font-size:.68rem;color:var(--gold);font-weight:500 }
+.alt-reason { font-size:.68rem;color:var(--ink-3);margin-top:.12rem }
+.prenom-row { display:flex;gap:.4rem;align-items:center;margin-bottom:.45rem }
+.prenom-num { font-family:var(--font-serif);font-size:1.1rem;color:var(--gold);width:20px;text-align:center;flex-shrink:0 }
+</style>
+</head>
+<body>
+
+<nav id="nav"><div class="nav-inner">
+  <a class="logo" href="index.html">Pré<span>noms</span></a>
+  <button class="nav-burger" onclick="toggleMenu()"><span></span><span></span><span></span></button>
+  <div class="nav-links" id="navLinks">
+    <a class="nav-link" href="recherche.html">Rechercher</a>
+    <a class="nav-link" href="comparer.html">Comparer</a>
+    <a class="nav-link" href="classement.html">Classement</a>
+    <a class="nav-link" href="tendances.html">Tendances</a>
+    <a class="nav-link active" href="harmonie.html">Harmonie</a>
+    <a class="nav-link" href="sondage.html">Sondage</a>
+    <a class="nav-link nav-premium" href="premium.html">✦ Premium</a>
+  </div>
+</div></nav>
+
+<div class="ad-banner"><span class="ad-label">Publicité</span><div class="ad-slot ad-slot-728">Google AdSense — 728×90</div></div>
+
+<div class="page-header"><div class="container">
+  <div>
+    <p class="page-tag">✦ Analyse prénom / nom</p>
+    <h1 class="page-title">Harmonie du <em>nom complet</em></h1>
+    <p class="page-sub">Phonétique, initiales, consonance, fluidité — analyse complète par l'IA</p>
+  </div>
+</div></div>
+
+<div style="max-width:720px;margin:0 auto;padding:1.5rem">
+
+  <div class="card" style="margin-bottom:1rem">
+    <h3 class="card-title">Votre nom de famille</h3>
+    <div class="form-group">
+      <label class="form-label">Nom de famille</label>
+      <input type="text" id="nomFamille" class="form-input" placeholder="Ex : Dupont, Martin, Beaumont…">
+    </div>
+  </div>
+
+  <div class="card" style="margin-bottom:1rem">
+    <h3 class="card-title">Prénoms à analyser</h3>
+    <p style="font-size:.8rem;color:var(--ink-3);margin-bottom:.85rem;margin-top:-.6rem">Ajoutez jusqu'à 5 prénoms pour les comparer avec le même nom de famille</p>
+    <div id="prenomList">
+      <div class="prenom-row"><span class="prenom-num">I</span><input class="form-input" type="text" placeholder="Prénom 1" style="border-radius:var(--radius-pill)"><button onclick="delRow(this)" style="background:none;border:1px solid var(--border);color:var(--ink-3);width:30px;height:30px;border-radius:50%;cursor:pointer;flex-shrink:0;font-size:1rem;display:flex;align-items:center;justify-content:center;transition:.15s">×</button></div>
+      <div class="prenom-row"><span class="prenom-num">II</span><input class="form-input" type="text" placeholder="Prénom 2" style="border-radius:var(--radius-pill)"><button onclick="delRow(this)" style="background:none;border:1px solid var(--border);color:var(--ink-3);width:30px;height:30px;border-radius:50%;cursor:pointer;flex-shrink:0;font-size:1rem;display:flex;align-items:center;justify-content:center;transition:.15s">×</button></div>
+    </div>
+    <button onclick="addRow()" style="width:100%;background:none;border:1px dashed var(--border);color:var(--ink-3);padding:.5rem;border-radius:var(--radius-pill);cursor:pointer;font-size:.78rem;margin-top:.5rem;transition:.15s">+ Analyser un autre prénom</button>
+  </div>
+
+  <button class="btn-ink" id="analyseBtn" onclick="doAnalyse()" style="width:100%;padding:.85rem;margin-bottom:1.5rem">Analyser l'harmonie ✦</button>
+
+  <div id="resultArea"></div>
+</div>
+
+<script src="app.js"></script>
+<script>
+const romans = ['I','II','III','IV','V'];
+
+function addRow() {
+  const list = document.getElementById('prenomList');
+  if (list.children.length >= 5) return;
+  const n = list.children.length;
+  const div = document.createElement('div');
+  div.className = 'prenom-row';
+  div.innerHTML = `<span class="prenom-num">${romans[n]}</span><input class="form-input" type="text" placeholder="Prénom ${n+1}" style="border-radius:var(--radius-pill)"><button onclick="delRow(this)" style="background:none;border:1px solid var(--border);color:var(--ink-3);width:30px;height:30px;border-radius:50%;cursor:pointer;flex-shrink:0;font-size:1rem;display:flex;align-items:center;justify-content:center">×</button>`;
+  list.appendChild(div);
+}
+
+function delRow(btn) {
+  const list = document.getElementById('prenomList');
+  if (list.children.length <= 1) return;
+  btn.parentElement.remove();
+  Array.from(list.children).forEach((el, i) => { el.querySelector('.prenom-num').textContent = romans[i]; });
+}
+
+function getPrenoms() {
+  return Array.from(document.querySelectorAll('#prenomList .form-input')).map(i => i.value.trim()).filter(Boolean);
+}
+
+async function doAnalyse() {
+  const nom = document.getElementById('nomFamille').value.trim();
+  const prenoms = getPrenoms();
+  if (!nom) { alert('Entrez votre nom de famille.'); return; }
+  if (!prenoms.length) { alert('Entrez au moins un prénom.'); return; }
+  const btn = document.getElementById('analyseBtn');
+  btn.disabled = true; btn.textContent = 'Analyse en cours…';
+  const area = document.getElementById('resultArea');
+  showLoading(area, 'Analyse phonétique et harmonique en cours…');
+
+  try {
+    const data = await callClaude(`Expert onomastique français. Analyse ${prenoms.join(', ')} avec le nom "${nom}". UNIQUEMENT JSON sans markdown:
+{"nom_famille":"${nom}","prenoms":[${prenoms.map(p => `{"prenom":"${p}","nom_complet":"${p} ${nom}","initiales":"${p[0]||'?'}.${nom[0]||'?'}.","score_global":8,"verdict":"Très harmonieux","verdict_detail":"2-3 phrases","criteres":{"fluidite_phonetique":{"score":8,"commentaire":"court"},"harmonie_sonore":{"score":7,"commentaire":"court"},"initiales":{"score":9,"commentaire":"court"},"longueur_equilibre":{"score":8,"commentaire":"court"},"facilite_internationale":{"score":6,"commentaire":"court"}},"syllabes":["syl1","syl2","syl3"],"syllabe_accentuee":1,"tags_positifs":["tag1","tag2"],"tags_negatifs":["tag1"],"points_attention":"phrase courte","alternatives":[{"prenom":"Alt1","score":9,"raison":"courte"},{"prenom":"Alt2","score":8,"raison":"courte"},{"prenom":"Alt3","score":8,"raison":"courte"}]}`).join(',')}]}
+Score sur 10. Phonétiquement rigoureux.`, 2000);
+    renderAnalyse(data, nom);
+  } catch(e) { showError(area); }
+  btn.disabled = false; btn.textContent = 'Analyser l\'harmonie ✦';
+}
+
+const critLabels = { fluidite_phonetique:'Fluidité phonétique', harmonie_sonore:'Harmonie sonore', initiales:'Qualité des initiales', longueur_equilibre:'Équilibre des longueurs', facilite_internationale:'Facilité internationale' };
+
+function renderOne(p, nom, idx) {
+  const score = p.score_global || 7;
+  const circ = 2 * Math.PI * 34;
+  const dash = circ * (score / 10);
+  const col = scoreColor(score);
+
+  const critHTML = Object.entries(p.criteres || {}).map(([k, v]) =>
+    `<div style="margin-bottom:.8rem">${scoreBar(critLabels[k] || k, v.score || 5)}<p style="font-size:.72rem;color:var(--ink-3);margin-top:-6px;padding-left:160px;line-height:1.4">${v.commentaire || ''}</p></div>`
+  ).join('');
+
+  const sylsHTML = (p.syllabes || []).map((s, i) => `<span class="syl${i === (p.syllabe_accentuee || 0) ? ' stress' : ''}">${s}</span>`).join('');
+
+  const posT = (p.tags_positifs || []).map(t => `<span class="badge badge-up" style="margin:.1rem">✓ ${t}</span>`).join('');
+  const negT = (p.tags_negatifs || []).map(t => `<span class="badge badge-dn" style="margin:.1rem">⚠ ${t}</span>`).join('');
+  const neuT = p.points_attention ? `<span class="badge badge-neutral" style="margin:.1rem">◇ ${p.points_attention}</span>` : '';
+
+  const altHTML = (p.alternatives || []).map(a => `<div class="alt-item" onclick="swapPrenom('${a.prenom}')"><span class="alt-name">${a.prenom} ${nom}</span><span class="alt-score">Score : ${a.score}/10</span><div class="alt-reason">${a.raison}</div></div>`).join('');
+
+  return `
+  <div class="fullname-hero" style="animation-delay:${idx*.08}s">
+    <div class="fullname-text">${p.nom_complet || p.prenom + ' ' + nom}</div>
+    <div class="fullname-initials">${p.initiales || ''}</div>
+  </div>
+
+  <div class="card" style="display:grid;grid-template-columns:auto 1fr;gap:1.25rem;align-items:center;margin-bottom:1rem;animation:fadeUp .3s ${idx*.08+.05}s ease both">
+    <div class="score-ring-wrap">
+      <svg width="88" height="88" viewBox="0 0 88 88">
+        <circle cx="44" cy="44" r="34" fill="none" stroke="var(--cream-2)" stroke-width="7"/>
+        <circle cx="44" cy="44" r="34" fill="none" stroke="${col}" stroke-width="7" stroke-dasharray="${dash.toFixed(1)} ${circ.toFixed(1)}" stroke-linecap="round"/>
+      </svg>
+      <div class="score-ring-num" style="color:${col}">${score}</div>
+    </div>
+    <div>
+      <div style="font-family:var(--font-serif);font-size:1.2rem;font-weight:300;color:var(--ink);margin-bottom:.3rem">${p.verdict || ''}</div>
+      <div style="font-size:.85rem;color:var(--ink-2);line-height:1.65">${p.verdict_detail || ''}</div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-bottom:1rem;animation:fadeUp .3s ${idx*.08+.1}s ease both">
+    <div class="card-label" style="margin-bottom:.85rem">Analyse détaillée</div>
+    ${critHTML}
+  </div>
+
+  <div class="card" style="margin-bottom:1rem;animation:fadeUp .3s ${idx*.08+.15}s ease both">
+    <div class="card-label">Découpage syllabique</div>
+    <div style="display:flex;flex-wrap:wrap;margin:.6rem 0">${sylsHTML}</div>
+    <div style="font-size:.7rem;color:var(--ink-3);margin-bottom:.65rem">Syllabe accentuée en surbrillance</div>
+    <div>${posT}${negT}${neuT}</div>
+  </div>
+
+  <div class="card" style="margin-bottom:1rem;animation:fadeUp .3s ${idx*.08+.2}s ease both">
+    <div class="card-label" style="margin-bottom:.75rem">Prénoms alternatifs harmonieux avec « ${nom} »</div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:.5rem">${altHTML}</div>
+  </div>`;
+}
+
+function renderAnalyse(data, nom) {
+  const area = document.getElementById('resultArea');
+  const prenoms = data.prenoms || [];
+  if (!prenoms.length) { showError(area); return; }
+
+  let html = '';
+  if (prenoms.length > 1) {
+    const sorted = [...prenoms].sort((a, b) => (b.score_global || 0) - (a.score_global || 0));
+    html += `<div style="background:var(--gold-pale);border:1px solid var(--gold-l);border-radius:var(--radius);padding:1rem 1.25rem;margin-bottom:1.25rem;display:flex;align-items:center;justify-content:space-between;gap:.75rem;flex-wrap:wrap">
+      <div><div style="font-size:.62rem;letter-spacing:.15em;text-transform:uppercase;font-weight:500;color:var(--gold);margin-bottom:.25rem">✦ Meilleure harmonie</div>
+      <div style="font-family:var(--font-serif);font-size:1.35rem;color:var(--ink)">${sorted[0].prenom} ${nom}</div></div>
+      <div style="font-family:var(--font-serif);font-size:2rem;color:var(--gold)">${sorted[0].score_global}/10</div>
+    </div>`;
+    prenoms.forEach((p, i) => {
+      html += `<div style="font-size:.62rem;letter-spacing:.15em;text-transform:uppercase;color:var(--ink-3);margin:1.5rem 0 .75rem;padding-bottom:.5rem;border-bottom:1px solid var(--border)">Analyse n°${i+1} — ${p.prenom} ${nom}</div>`;
+      html += renderOne(p, nom, i);
+    });
+  } else {
+    html = renderOne(prenoms[0], nom, 0);
+  }
+  html += gateHTML('✦ Rapport PDF complet', 'Analyse complète à imprimer et partager — compatibilité numérologique, sondage pré-rempli, 10 alternatives personnalisées.');
+  area.innerHTML = html;
+}
+
+function swapPrenom(name) {
+  const inp = document.querySelector('#prenomList .form-input');
+  if (inp) { inp.value = name; doAnalyse(); }
+}
+</script>
+</body>
+</html>

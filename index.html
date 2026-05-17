@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Prénoms — L'outil de référence pour choisir le prénom de votre enfant : significations, tendances, classements, harmonie phonétique, sondages famille.">
+<title>Prénoms — L'art de nommer votre enfant</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<!-- ═══ NAVIGATION ═══ -->
+<nav id="nav">
+  <div class="nav-inner">
+    <a class="logo" href="index.html">Pré<span>noms</span></a>
+    <button class="nav-burger" id="burger" aria-label="Menu" onclick="toggleMenu()">
+      <span></span><span></span><span></span>
+    </button>
+    <div class="nav-links" id="navLinks">
+      <a class="nav-link" href="recherche.html">Rechercher</a>
+      <a class="nav-link" href="comparer.html">Comparer</a>
+      <a class="nav-link" href="classement.html">Classement</a>
+      <a class="nav-link" href="tendances.html">Tendances</a>
+      <a class="nav-link" href="harmonie.html">Harmonie</a>
+      <a class="nav-link" href="sondage.html">Sondage</a>
+      <a class="nav-link nav-premium" href="premium.html">✦ Premium</a>
+    </div>
+  </div>
+</nav>
+
+<!-- ═══ BANNIÈRE PUBLICITAIRE ═══ -->
+<div class="ad-banner">
+  <span class="ad-label">Publicité</span>
+  <div class="ad-slot ad-slot-728">Google AdSense — 728×90</div>
+</div>
+
+<!-- ═══ HERO ═══ -->
+<section class="hero">
+  <div class="hero-ornament">✦</div>
+  <div class="hero-content">
+    <p class="hero-tag">L'art de nommer votre enfant</p>
+    <h1 class="hero-title">Trouvez le prénom<br><em>parfait</em></h1>
+    <p class="hero-sub">Significations, tendances historiques, harmonie avec votre nom de famille, classements et sondages — tout ce qu'il faut pour choisir avec sérénité.</p>
+    <div class="hero-cta">
+      <a href="recherche.html" class="btn-primary">Rechercher un prénom</a>
+      <a href="#outils" class="btn-ghost">Découvrir les outils</a>
+    </div>
+  </div>
+  <div class="hero-scroll-hint">↓</div>
+</section>
+
+<!-- ═══ RECHERCHE RAPIDE ═══ -->
+<section class="quick-search-section">
+  <div class="container">
+    <p class="section-micro">✦ Recherche instantanée</p>
+    <div class="search-bar-wrap">
+      <input type="text" id="quickInput" class="search-input" placeholder="Entrez un prénom…" autocomplete="off">
+      <button class="search-btn" id="quickBtn" onclick="quickSearch()">Analyser</button>
+    </div>
+    <div class="quick-tags">
+      <button class="qtag" onclick="setSearch('Alma')">Alma</button>
+      <button class="qtag" onclick="setSearch('Gabriel')">Gabriel</button>
+      <button class="qtag" onclick="setSearch('Léonie')">Léonie</button>
+      <button class="qtag" onclick="setSearch('Raphaël')">Raphaël</button>
+      <button class="qtag" onclick="setSearch('Iris')">Iris</button>
+      <button class="qtag" onclick="setSearch('Malo')">Malo</button>
+      <button class="qtag" onclick="setSearch('Adèle')">Adèle</button>
+    </div>
+    <div id="quickResult"></div>
+  </div>
+</section>
+
+<!-- ═══ OUTILS ═══ -->
+<section class="tools-section" id="outils">
+  <div class="container">
+    <p class="section-micro">✦ 6 outils puissants</p>
+    <h2 class="section-title">Tout ce qu'il faut pour<br><em>bien choisir</em></h2>
+    <p class="section-sub">Des outils conçus pour les futurs parents qui veulent décider en toute connaissance de cause.</p>
+    <div class="tools-grid">
+      <a href="recherche.html" class="tool-card">
+        <div class="tool-icon">◈</div>
+        <h3 class="tool-title">Recherche & Analyse</h3>
+        <p class="tool-desc">Signification, étymologie, popularité historique, phonétique et critères de choix pour n'importe quel prénom.</p>
+        <span class="tool-arrow">Explorer →</span>
+      </a>
+      <a href="comparer.html" class="tool-card">
+        <div class="tool-icon">◫</div>
+        <h3 class="tool-title">Comparateur</h3>
+        <p class="tool-desc">Comparez jusqu'à 4 prénoms côte à côte avec scores sur l'harmonie, l'originalité et l'intemporalité.</p>
+        <span class="tool-arrow">Comparer →</span>
+      </a>
+      <a href="classement.html" class="tool-card">
+        <div class="tool-icon">◉</div>
+        <h3 class="tool-title">Classement</h3>
+        <p class="tool-desc">Palmarès par année (1970–2024) ou par période personnalisée. Podium, barres de popularité et tendances.</p>
+        <span class="tool-arrow">Voir le top →</span>
+      </a>
+      <a href="tendances.html" class="tool-card">
+        <div class="tool-icon">◌</div>
+        <h3 class="tool-title">Tendances</h3>
+        <p class="tool-desc">Courbes d'évolution interactives depuis 1990, jusqu'à 6 prénoms simultanés sur un même graphique.</p>
+        <span class="tool-arrow">Analyser →</span>
+      </a>
+      <a href="harmonie.html" class="tool-card">
+        <div class="tool-icon">◎</div>
+        <h3 class="tool-title">Harmonie prénom / nom</h3>
+        <p class="tool-desc">Analyse phonétique complète : fluidité, initiales, consonance, découpage syllabique et alternatives.</p>
+        <span class="tool-arrow">Tester →</span>
+      </a>
+      <a href="sondage.html" class="tool-card">
+        <div class="tool-icon">◐</div>
+        <h3 class="tool-title">Sondage famille</h3>
+        <p class="tool-desc">Créez un sondage et partagez-le avec vos proches pour qu'ils votent pour leur prénom favori.</p>
+        <span class="tool-arrow">Créer →</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ STATS ═══ -->
+<section class="stats-section">
+  <div class="container">
+    <div class="stats-grid">
+      <div class="stat"><div class="stat-n">+35 000</div><div class="stat-l">Prénoms analysés</div></div>
+      <div class="stat"><div class="stat-n">54 ans</div><div class="stat-l">De données historiques</div></div>
+      <div class="stat"><div class="stat-n">6</div><div class="stat-l">Outils spécialisés</div></div>
+      <div class="stat"><div class="stat-n">100%</div><div class="stat-l">Alimenté par l'IA</div></div>
+    </div>
+    <p class="stats-quote">« Donner un prénom, c'est offrir une identité pour toute une vie. »</p>
+  </div>
+</section>
+
+<!-- ═══ TENDANCES ═══ -->
+<section class="trending-section">
+  <div class="container">
+    <p class="section-micro">✦ En ce moment</p>
+    <h2 class="section-title">Prénoms <em>en vogue</em> en 2025</h2>
+    <div class="trending-grid">
+      <div class="trending-col">
+        <div class="trending-col-head"><span class="tcol-dot tcol-dot-f"></span>Filles</div>
+        <a href="recherche.html?q=Alma" class="trow"><span class="trank">1</span><span class="tname">Alma</span><span class="tup">↑</span></a>
+        <a href="recherche.html?q=Léonie" class="trow"><span class="trank">2</span><span class="tname">Léonie</span><span class="tup">↑</span></a>
+        <a href="recherche.html?q=Adèle" class="trow"><span class="trank">3</span><span class="tname">Adèle</span></a>
+        <a href="recherche.html?q=Iris" class="trow"><span class="trank">4</span><span class="tname">Iris</span></a>
+        <a href="recherche.html?q=Camille" class="trow"><span class="trank">5</span><span class="tname">Camille</span></a>
+      </div>
+      <div class="trending-col">
+        <div class="trending-col-head"><span class="tcol-dot tcol-dot-m"></span>Garçons</div>
+        <a href="recherche.html?q=Gabriel" class="trow"><span class="trank">1</span><span class="tname">Gabriel</span></a>
+        <a href="recherche.html?q=Raphaël" class="trow"><span class="trank">2</span><span class="tname">Raphaël</span></a>
+        <a href="recherche.html?q=Malo" class="trow"><span class="trank">3</span><span class="tname">Malo</span><span class="tup">↑</span></a>
+        <a href="recherche.html?q=Théo" class="trow"><span class="trank">4</span><span class="tname">Théo</span></a>
+        <a href="recherche.html?q=Arthur" class="trow"><span class="trank">5</span><span class="tname">Arthur</span></a>
+      </div>
+      <div class="trending-col">
+        <div class="trending-col-head"><span class="tcol-dot tcol-dot-mx"></span>Mixtes & rares</div>
+        <a href="recherche.html?q=Eden" class="trow"><span class="trank">1</span><span class="tname">Eden</span><span class="tup">↑</span></a>
+        <a href="recherche.html?q=Lior" class="trow"><span class="trank">2</span><span class="tname">Lior</span><span class="tup">↑</span></a>
+        <a href="recherche.html?q=Nour" class="trow"><span class="trank">3</span><span class="tname">Nour</span></a>
+        <a href="recherche.html?q=Sasha" class="trow"><span class="trank">4</span><span class="tname">Sasha</span></a>
+        <a href="recherche.html?q=Inès" class="trow"><span class="trank">5</span><span class="tname">Inès</span></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ COMMENT ÇA MARCHE ═══ -->
+<section class="how-section">
+  <div class="container">
+    <p class="section-micro">✦ Comment ça marche</p>
+    <h2 class="section-title">Simple, <em>rapide</em>, éclairé</h2>
+    <div class="steps-grid">
+      <div class="step"><div class="step-n">01</div><h3 class="step-title">Cherchez ou parcourez</h3><p class="step-desc">Entrez un prénom ou explorez les classements et tendances historiques depuis 1970.</p></div>
+      <div class="step"><div class="step-n">02</div><h3 class="step-title">Analysez en profondeur</h3><p class="step-desc">Signification, phonétique, harmonie avec votre nom de famille — calculés par l'IA en temps réel.</p></div>
+      <div class="step"><div class="step-n">03</div><h3 class="step-title">Comparez vos favoris</h3><p class="step-desc">Mettez vos prénoms préférés côte à côte et voyez lequel l'emporte selon vos critères.</p></div>
+      <div class="step"><div class="step-n">04</div><h3 class="step-title">Faites voter la famille</h3><p class="step-desc">Créez un sondage et partagez le lien à vos proches pour une décision collective.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ PREMIUM ═══ -->
+<section class="premium-section">
+  <div class="container">
+    <div class="premium-box">
+      <span class="premium-badge">✦ Premium</span>
+      <h2 class="premium-title">Tout, sans limite,<br><em>pour votre futur enfant</em></h2>
+      <ul class="premium-list">
+        <li>✦ Rapports PDF complets à télécharger</li>
+        <li>✦ Historique depuis 1900 (données INSEE)</li>
+        <li>✦ Analyse numérologique du prénom</li>
+        <li>✦ Compatibilité prénom + fratrie</li>
+        <li>✦ Sondages illimités avec partage avancé</li>
+        <li>✦ Accès prioritaire aux nouvelles données</li>
+      </ul>
+      <div class="premium-price">€4,99 <span class="premium-period">/ mois</span></div>
+      <div class="premium-cta">
+        <a href="premium.html" class="btn-primary">Commencer l'essai gratuit</a>
+        <a href="premium.html" class="btn-ghost-light">En savoir plus</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ AD FOOTER ═══ -->
+<div class="ad-banner ad-banner-footer">
+  <span class="ad-label">Publicité</span>
+  <div class="ad-slot ad-slot-970">Google AdSense — 970×90</div>
+</div>
+
+<!-- ═══ FOOTER ═══ -->
+<footer>
+  <div class="footer-inner container">
+    <div class="footer-brand">
+      <a class="logo" href="index.html">Pré<span>noms</span></a>
+      <p>L'outil de référence pour choisir le prénom de votre enfant avec sérénité.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Outils</h4>
+      <a href="recherche.html">Recherche & Analyse</a>
+      <a href="comparer.html">Comparateur</a>
+      <a href="classement.html">Classement</a>
+      <a href="tendances.html">Tendances</a>
+      <a href="harmonie.html">Harmonie prénom/nom</a>
+      <a href="sondage.html">Sondage famille</a>
+    </div>
+    <div class="footer-col">
+      <h4>Légal</h4>
+      <a href="#">Mentions légales</a>
+      <a href="#">Politique de confidentialité</a>
+      <a href="#">CGU</a>
+      <a href="#">Cookies</a>
+    </div>
+    <div class="footer-col">
+      <h4>Contact</h4>
+      <a href="#">À propos</a>
+      <a href="#">Contact</a>
+      <a href="#">Blog prénoms</a>
+      <a href="#">Presse</a>
+    </div>
+  </div>
+  <div class="footer-bottom container">
+    <p>© 2025 Prénoms.fr — Tous droits réservés</p>
+    <p class="footer-ad-note">Espace partenaire publicitaire disponible</p>
+  </div>
+</footer>
+
+<script src="app.js"></script>
+<script>
+function quickSearch() {
+  const q = document.getElementById('quickInput').value.trim();
+  if (!q) return;
+  window.location.href = 'recherche.html?q=' + encodeURIComponent(q);
+}
+function setSearch(name) {
+  document.getElementById('quickInput').value = name;
+  window.location.href = 'recherche.html?q=' + encodeURIComponent(name);
+}
+document.getElementById('quickInput').addEventListener('keydown', e => {
+  if (e.key === 'Enter') quickSearch();
+});
+</script>
+</body>
+</html>

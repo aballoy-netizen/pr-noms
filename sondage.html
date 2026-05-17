@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sondage — Prénoms</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<style>
+.step-indicator { display:flex;background:var(--white);border:1px solid var(--border);border-radius:var(--radius-pill);overflow:hidden;margin-bottom:1.5rem }
+.step-tab { flex:1;text-align:center;padding:.6rem;font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;font-weight:500;color:var(--ink-3);cursor:pointer;transition:.2s;border-right:1px solid var(--border) }
+.step-tab:last-child { border-right:none }
+.step-tab.done { background:var(--cream-2);color:var(--ink-3) }
+.step-tab.active { background:var(--ink);color:var(--cream) }
+.vote-opt { background:var(--white);border:1.5px solid var(--border);border-radius:var(--radius);padding:.9rem 1.1rem;cursor:pointer;transition:.2s;display:flex;align-items:center;justify-content:space-between;gap:.75rem;margin-bottom:.55rem }
+.vote-opt:hover { border-color:var(--gold-l);background:var(--cream) }
+.vote-name { font-family:var(--font-serif);font-size:1.4rem;font-weight:300;color:var(--ink) }
+.vote-bar-bg { flex:1;height:5px;background:var(--cream-2);border-radius:3px;overflow:hidden }
+.vote-bar-fill { height:100%;background:var(--gold);border-radius:3px;transition:.6s }
+.vote-count { font-size:.75rem;color:var(--ink-3);min-width:44px;text-align:right }
+.vote-pct { font-size:.82rem;font-weight:500;color:var(--gold);min-width:34px;text-align:right }
+.winner-announce { background:var(--ink);border-radius:var(--radius);padding:1.1rem 1.4rem;display:flex;align-items:center;gap:1rem;margin-bottom:1rem;flex-wrap:wrap }
+.wa-text { color:rgba(255,255,255,.65);font-size:.82rem;line-height:1.5 }
+.wa-text strong { color:var(--cream);display:block;font-size:.88rem;margin-bottom:.1rem }
+.wa-name { font-family:var(--font-serif);font-size:1.8rem;font-weight:300;color:var(--gold-l);margin-left:auto }
+.avatar { width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.68rem;font-weight:500;border:2px solid var(--white);flex-shrink:0 }
+.prenom-slot-row { display:flex;gap:.4rem;align-items:center;margin-bottom:.45rem }
+.slot-num { font-family:var(--font-serif);font-size:1.1rem;color:var(--gold);width:20px;text-align:center;flex-shrink:0 }
+.slot-del { background:none;border:1px solid var(--border);color:var(--ink-3);width:28px;height:28px;border-radius:50%;cursor:pointer;font-size:.9rem;display:flex;align-items:center;justify-content:center;transition:.15s;flex-shrink:0 }
+.slot-del:hover { background:#fee;border-color:#f7c1c1;color:#c33 }
+</style>
+</head>
+<body>
+
+<nav id="nav"><div class="nav-inner">
+  <a class="logo" href="index.html">Pré<span>noms</span></a>
+  <button class="nav-burger" onclick="toggleMenu()"><span></span><span></span><span></span></button>
+  <div class="nav-links" id="navLinks">
+    <a class="nav-link" href="recherche.html">Rechercher</a>
+    <a class="nav-link" href="comparer.html">Comparer</a>
+    <a class="nav-link" href="classement.html">Classement</a>
+    <a class="nav-link" href="tendances.html">Tendances</a>
+    <a class="nav-link" href="harmonie.html">Harmonie</a>
+    <a class="nav-link active" href="sondage.html">Sondage</a>
+    <a class="nav-link nav-premium" href="premium.html">✦ Premium</a>
+  </div>
+</div></nav>
+
+<div class="ad-banner"><span class="ad-label">Publicité</span><div class="ad-slot ad-slot-728">Google AdSense — 728×90</div></div>
+
+<div class="page-header"><div class="container">
+  <div>
+    <p class="page-tag">✦ Sondage famille</p>
+    <h1 class="page-title">Créez un sondage <em>à partager</em></h1>
+    <p class="page-sub">Faites voter votre entourage sur vos prénoms favoris</p>
+  </div>
+</div></div>
+
+<div style="max-width:680px;margin:0 auto;padding:1.5rem">
+
+  <div class="step-indicator">
+    <div class="step-tab active" id="t1">1 · Créer</div>
+    <div class="step-tab" id="t2">2 · Partager</div>
+    <div class="step-tab" id="t3">3 · Résultats</div>
+  </div>
+
+  <!-- ÉTAPE 1 -->
+  <div id="s1">
+    <div class="card" style="margin-bottom:1rem">
+      <h3 class="card-title">Informations du sondage</h3>
+      <div class="form-group">
+        <label class="form-label">Titre</label>
+        <input type="text" id="pollTitle" class="form-input" value="Quel prénom pour notre bébé ?">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Message d'introduction (optionnel)</label>
+        <textarea id="pollDesc" class="form-textarea">Bébé arrive bientôt ! Aidez-nous à choisir son prénom en votant pour votre favori ✨</textarea>
+      </div>
+    </div>
+
+    <div class="card" style="margin-bottom:1rem">
+      <h3 class="card-title">Prénoms à soumettre au vote</h3>
+      <p style="font-size:.8rem;color:var(--ink-3);margin-bottom:.85rem;margin-top:-.6rem">Entre 2 et 6 prénoms</p>
+      <div id="slotsList">
+        <div class="prenom-slot-row"><span class="slot-num">I</span><input class="form-input" type="text" value="Léa" style="border-radius:var(--radius-pill)"><button class="slot-del" onclick="delSlot(this)">×</button></div>
+        <div class="prenom-slot-row"><span class="slot-num">II</span><input class="form-input" type="text" value="Alma" style="border-radius:var(--radius-pill)"><button class="slot-del" onclick="delSlot(this)">×</button></div>
+        <div class="prenom-slot-row"><span class="slot-num">III</span><input class="form-input" type="text" value="Iris" style="border-radius:var(--radius-pill)"><button class="slot-del" onclick="delSlot(this)">×</button></div>
+      </div>
+      <button onclick="addSlot()" style="width:100%;background:none;border:1px dashed var(--border);color:var(--ink-3);padding:.5rem;border-radius:var(--radius-pill);cursor:pointer;font-size:.78rem;margin-top:.5rem;transition:.15s">+ Ajouter un prénom</button>
+    </div>
+
+    <div class="card" style="border-color:var(--gold-l);margin-bottom:1rem">
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:.75rem;margin-bottom:.5rem;flex-wrap:wrap">
+        <h3 class="card-title" style="margin-bottom:0">✦ Suggestions IA</h3>
+        <button id="aiBtn" onclick="genAI()" style="background:var(--gold-pale);border:1px solid var(--gold-l);color:var(--gold-deep);cursor:pointer;padding:.45rem .95rem;border-radius:var(--radius-pill);font-size:.72rem;font-weight:500;letter-spacing:.06em;text-transform:uppercase;white-space:nowrap;transition:.15s">Générer</button>
+      </div>
+      <p style="font-size:.8rem;color:var(--ink-3);margin-bottom:.75rem">L'IA analyse vos prénoms et propose des alternatives harmonieuses</p>
+      <div id="aiArea"></div>
+    </div>
+
+    <div style="display:flex;justify-content:flex-end">
+      <button class="btn-ink" onclick="goStep2()">Continuer → Partager</button>
+    </div>
+  </div>
+
+  <!-- ÉTAPE 2 -->
+  <div id="s2" style="display:none">
+    <div class="card" style="margin-bottom:1rem">
+      <h3 class="card-title">Votre sondage est prêt ✦</h3>
+      <p style="font-size:.85rem;color:var(--ink-3);margin-bottom:1rem">Partagez ce lien avec vos proches pour qu'ils votent</p>
+      <div class="card-label">Lien de partage</div>
+      <div style="display:flex;gap:.6rem;align-items:center;background:var(--cream-2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:.75rem 1rem;margin-bottom:1rem">
+        <span id="shareUrl" style="flex:1;font-size:.82rem;color:var(--ink-2);word-break:break-all;font-family:monospace">prenoms.fr/sondage/…</span>
+        <button onclick="copyLink()" style="background:var(--ink);color:var(--cream);border:none;padding:.45rem .9rem;border-radius:var(--radius-pill);font-size:.7rem;font-weight:500;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;white-space:nowrap;transition:.15s" id="copyBtn">Copier</button>
+      </div>
+      <div style="display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:1.25rem">
+        <button onclick="alert('En production : partage WhatsApp')" class="btn-ghost-light" style="font-size:.72rem;padding:.5rem 1rem">📱 WhatsApp</button>
+        <button onclick="alert('En production : partage Email')" class="btn-ghost-light" style="font-size:.72rem;padding:.5rem 1rem">✉️ Email</button>
+        <button onclick="alert('En production : partage SMS')" class="btn-ghost-light" style="font-size:.72rem;padding:.5rem 1rem">💬 SMS</button>
+      </div>
+      <div class="card-label" style="margin-bottom:.75rem">Aperçu du sondage</div>
+      <div id="preview"></div>
+    </div>
+    <div style="display:flex;gap:.6rem;justify-content:space-between">
+      <button class="btn-ghost-light" onclick="showStep(1)">← Modifier</button>
+      <button class="btn-ink" onclick="goStep3()">Voir les résultats →</button>
+    </div>
+  </div>
+
+  <!-- ÉTAPE 3 -->
+  <div id="s3" style="display:none">
+    <div id="winnerArea"></div>
+    <div class="card" style="margin-bottom:1rem">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;flex-wrap:wrap;gap:.5rem">
+        <h3 style="font-family:var(--font-serif);font-size:1.1rem;font-weight:300;color:var(--ink)">Résultats en direct</h3>
+        <span id="totalVotes" style="font-size:.75rem;color:var(--ink-3)">0 vote</span>
+      </div>
+      <div id="resultsArea"></div>
+      <div style="margin-top:1rem;padding-top:1rem;border-top:1px solid var(--border)">
+        <div style="font-size:.72rem;color:var(--ink-3);margin-bottom:.5rem">Votants</div>
+        <div id="votersRow" style="display:flex;flex-wrap:wrap;gap:.35rem"></div>
+      </div>
+    </div>
+    <div class="card" style="border-color:var(--gold-l);margin-bottom:1rem">
+      <h3 style="font-family:var(--font-serif);font-size:1rem;font-weight:300;color:var(--ink);margin-bottom:.5rem">✦ Simuler un vote</h3>
+      <p style="font-size:.8rem;color:var(--ink-3);margin-bottom:.75rem">Cliquez sur un prénom pour simuler un vote de votre entourage</p>
+      <div id="voteButtons" style="display:flex;gap:.5rem;flex-wrap:wrap"></div>
+    </div>
+    <div style="display:flex;gap:.6rem;justify-content:space-between;flex-wrap:wrap">
+      <button class="btn-ghost-light" onclick="showStep(2)">← Partage</button>
+      <button class="btn-ghost-light" onclick="resetAll()">Nouveau sondage</button>
+    </div>
+  </div>
+
+</div>
+
+<script src="app.js"></script>
+<script>
+const romans = ['I','II','III','IV','V','VI'];
+let votes = {}, voters = [], pollData = {};
+const avatarNames = ['Maman','Papa','Grand-mère','Grand-père','Tante','Oncle','Ami(e)','Sœur','Frère'];
+const avatarColors = ['#e8d5b0','#d5e8d0','#d0d5e8','#e8d0d5','#e0d5e8'];
+const avatarTextColors = ['#7a5a20','#3a6b30','#304080','#803040','#603080'];
+
+function addSlot() {
+  const list = document.getElementById('slotsList');
+  if (list.children.length >= 6) return;
+  const n = list.children.length;
+  const div = document.createElement('div');
+  div.className = 'prenom-slot-row';
+  div.innerHTML = `<span class="slot-num">${romans[n]}</span><input class="form-input" type="text" placeholder="Prénom ${n+1}" style="border-radius:var(--radius-pill)"><button class="slot-del" onclick="delSlot(this)">×</button>`;
+  list.appendChild(div);
+}
+
+function delSlot(btn) {
+  const list = document.getElementById('slotsList');
+  if (list.children.length <= 2) return;
+  btn.parentElement.remove();
+  Array.from(list.children).forEach((el, i) => { el.querySelector('.slot-num').textContent = romans[i]; });
+}
+
+function getSlots() {
+  return Array.from(document.querySelectorAll('#slotsList .form-input')).map(i => i.value.trim()).filter(Boolean);
+}
+
+async function genAI() {
+  const prenoms = getSlots();
+  if (!prenoms.length) { alert('Ajoutez au moins un prénom.'); return; }
+  const btn = document.getElementById('aiBtn');
+  btn.disabled = true; btn.textContent = 'Génération…';
+  const area = document.getElementById('aiArea');
+  area.innerHTML = '<div class="loading-bar-wrap"><div class="loading-bar"></div></div>';
+  try {
+    const d = await callClaude(`Basé sur: ${prenoms.join(', ')}, suggère 4 prénoms similaires (style/origine/harmonie). UNIQUEMENT JSON sans markdown:
+{"suggestions":[{"prenom":"Nom","raison":"raison courte max 8 mots"}]}`);
+    area.innerHTML = `<div style="display:flex;gap:.4rem;flex-wrap:wrap">${d.suggestions.map(s => `<button onclick="addSuggestion('${s.prenom}')" style="background:var(--cream-2);border:1px solid var(--border);border-radius:var(--radius-pill);padding:.35rem .85rem;cursor:pointer;transition:.15s;text-align:left"><strong style="font-family:var(--font-serif);font-size:1rem;color:var(--ink)">${s.prenom}</strong> <span style="font-size:.7rem;color:var(--ink-3)">— ${s.raison}</span></button>`).join('')}</div>`;
+  } catch(e) { area.innerHTML = '<p style="font-size:.8rem;color:#c33">Erreur. Réessayez.</p>'; }
+  btn.disabled = false; btn.textContent = 'Générer';
+}
+
+function addSuggestion(name) {
+  const list = document.getElementById('slotsList');
+  if (list.children.length >= 6) return;
+  const n = list.children.length;
+  const div = document.createElement('div');
+  div.className = 'prenom-slot-row';
+  div.innerHTML = `<span class="slot-num">${romans[n]}</span><input class="form-input" type="text" value="${name}" style="border-radius:var(--radius-pill)"><button class="slot-del" onclick="delSlot(this)">×</button>`;
+  list.appendChild(div);
+}
+
+function goStep2() {
+  const prenoms = getSlots();
+  if (prenoms.length < 2) { alert('Ajoutez au moins 2 prénoms.'); return; }
+  pollData = { title: document.getElementById('pollTitle').value || 'Votez !', desc: document.getElementById('pollDesc').value || '', prenoms };
+  votes = {}; prenoms.forEach(p => { votes[p] = 0; });
+  const pid = 'sondage-' + Math.random().toString(36).slice(2, 8);
+  document.getElementById('shareUrl').textContent = `prenoms.fr/${pid}`;
+  document.getElementById('preview').innerHTML = `<div style="background:var(--cream-2);border:1px solid var(--border);border-radius:var(--radius);padding:1.1rem">
+    <div style="font-family:var(--font-serif);font-size:1.2rem;font-weight:300;color:var(--ink);margin-bottom:.25rem">${pollData.title}</div>
+    ${pollData.desc ? `<div style="font-size:.8rem;color:var(--ink-3);margin-bottom:.75rem">${pollData.desc}</div>` : ''}
+    ${prenoms.map(p => `<div style="background:var(--white);border:1px solid var(--border);border-radius:8px;padding:.7rem 1rem;margin-bottom:.35rem;display:flex;align-items:center;gap:.6rem;font-family:var(--font-serif);font-size:1.1rem;color:var(--ink)"><div style="width:14px;height:14px;border-radius:50%;border:1.5px solid var(--border)"></div>${p}</div>`).join('')}
+    <div style="margin-top:.6rem;font-size:.65rem;color:var(--ink-3);text-align:center">Prénoms.fr</div>
+  </div>`;
+  showStep(2);
+}
+
+function goStep3() {
+  voters = [];
+  renderResults();
+  document.getElementById('voteButtons').innerHTML = pollData.prenoms.map(p =>
+    `<button onclick="simVote('${p}')" style="background:var(--cream-2);border:1px solid var(--border);border-radius:var(--radius-pill);padding:.45rem 1rem;cursor:pointer;font-family:var(--font-serif);font-size:1.1rem;color:var(--ink);transition:.15s" onmouseover="this.style.borderColor='var(--gold)'" onmouseout="this.style.borderColor='var(--border)'">${p}</button>`
+  ).join('');
+  showStep(3);
+}
+
+function renderResults() {
+  const total = Object.values(votes).reduce((s, v) => s + v, 0);
+  document.getElementById('totalVotes').textContent = `${total} vote${total !== 1 ? 's' : ''}`;
+  document.getElementById('resultsArea').innerHTML = Object.entries(votes).sort((a,b) => b[1]-a[1]).map(([name, v]) => {
+    const pct = total ? Math.round(v / total * 100) : 0;
+    return `<div class="vote-opt"><span class="vote-name">${name}</span><div class="vote-bar-bg"><div class="vote-bar-fill" style="width:${pct}%"></div></div><span class="vote-count">${v} vote${v!==1?'s':''}</span><span class="vote-pct">${pct}%</span></div>`;
+  }).join('');
+  const wa = document.getElementById('winnerArea');
+  if (total > 0) {
+    const sorted = Object.entries(votes).sort((a,b) => b[1]-a[1]);
+    wa.innerHTML = `<div class="winner-announce"><div class="wa-text"><strong>✦ En tête</strong>Avec ${sorted[0][1]} vote${sorted[0][1]!==1?'s':''} sur ${total}</div><div class="wa-name">${sorted[0][0]}</div></div>`;
+  } else wa.innerHTML = '';
+}
+
+function simVote(name) {
+  votes[name] = (votes[name] || 0) + 1;
+  const available = avatarNames.filter(n => !voters.includes(n));
+  voters.push(available.length ? available[Math.floor(Math.random()*available.length)] : 'Proche ' + (voters.length + 1));
+  renderResults();
+  document.getElementById('votersRow').innerHTML = voters.map((v, i) => `<div class="avatar" style="background:${avatarColors[i%5]};color:${avatarTextColors[i%5]}" title="${v}">${v.slice(0,2).toUpperCase()}</div>`).join('');
+}
+
+function copyLink() {
+  const url = document.getElementById('shareUrl').textContent;
+  navigator.clipboard.writeText('https://' + url).then(() => {
+    const btn = document.getElementById('copyBtn');
+    btn.textContent = 'Copié !';
+    setTimeout(() => btn.textContent = 'Copier', 2000);
+  }).catch(() => alert('Lien : https://' + url));
+}
+
+function showStep(n) {
+  ['s1','s2','s3'].forEach((id, i) => document.getElementById(id).style.display = i+1 === n ? 'block' : 'none');
+  ['t1','t2','t3'].forEach((id, i) => {
+    const t = document.getElementById(id);
+    t.className = 'step-tab' + (i+1 === n ? ' active' : i+1 < n ? ' done' : '');
+  });
+}
+
+function resetAll() { pollData = {}; votes = {}; voters = []; document.getElementById('winnerArea').innerHTML = ''; showStep(1); }
+</script>
+</body>
+</html>

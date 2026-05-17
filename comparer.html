@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Comparateur — Prénoms</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<style>
+.comp-grid { display: grid; gap: 1rem; }
+.comp-card { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; animation: fadeUp .3s ease both; }
+.comp-head { background: var(--ink); padding: 1rem 1.25rem; display: flex; align-items: center; justify-content: space-between; }
+.comp-head-name { font-family: var(--font-serif); font-size: 1.6rem; font-weight: 300; color: var(--cream); }
+.comp-head-sub { font-size: .68rem; color: var(--gold-l); letter-spacing: .08em; text-transform: uppercase; margin-top: .15rem; }
+.comp-body { padding: 1.1rem 1.25rem; }
+.comp-row { padding: .6rem 0; border-bottom: 1px solid var(--cream-2); }
+.comp-row:last-child { border-bottom: none; }
+.comp-row-label { font-size: .6rem; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-3); margin-bottom: .3rem; }
+.comp-row-val { font-size: .88rem; color: var(--ink-2); }
+.remove-btn { background: none; border: 1px solid rgba(255,255,255,.2); color: rgba(255,255,255,.6); width: 28px; height: 28px; border-radius: 50%; cursor: pointer; font-size: 1rem; display: flex; align-items: center; justify-content: center; transition: .15s; }
+.remove-btn:hover { background: rgba(255,255,255,.12); color: #fff; }
+.winner-bar { background: var(--ink); border-radius: var(--radius); padding: 1rem 1.4rem; display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin-bottom: 1rem; flex-wrap: wrap; }
+.winner-bar-label { color: rgba(255,255,255,.6); font-size: .82rem; }
+.winner-bar-label strong { color: var(--cream); display: block; font-size: .9rem; margin-bottom: .1rem; }
+.winner-name { font-family: var(--font-serif); font-size: 2rem; font-weight: 300; color: var(--gold-l); }
+</style>
+</head>
+<body>
+
+<nav id="nav"><div class="nav-inner">
+  <a class="logo" href="index.html">Pré<span>noms</span></a>
+  <button class="nav-burger" onclick="toggleMenu()"><span></span><span></span><span></span></button>
+  <div class="nav-links" id="navLinks">
+    <a class="nav-link" href="recherche.html">Rechercher</a>
+    <a class="nav-link active" href="comparer.html">Comparer</a>
+    <a class="nav-link" href="classement.html">Classement</a>
+    <a class="nav-link" href="tendances.html">Tendances</a>
+    <a class="nav-link" href="harmonie.html">Harmonie</a>
+    <a class="nav-link" href="sondage.html">Sondage</a>
+    <a class="nav-link nav-premium" href="premium.html">✦ Premium</a>
+  </div>
+</div></nav>
+
+<div class="ad-banner"><span class="ad-label">Publicité</span><div class="ad-slot ad-slot-728">Google AdSense — 728×90</div></div>
+
+<div class="page-header"><div class="container">
+  <div>
+    <p class="page-tag">✦ Comparateur</p>
+    <h1 class="page-title">Comparez jusqu'à <em>4 prénoms</em> côte à côte</h1>
+    <p class="page-sub">Scores, origines, phonétique et tendances — tout en un coup d'œil</p>
+  </div>
+</div></div>
+
+<div style="background:var(--white);border-bottom:1px solid var(--border);padding:1.25rem 0">
+  <div class="container">
+    <div style="display:flex;gap:.6rem;flex-wrap:wrap;align-items:center">
+      <div class="search-bar-wrap" style="flex:1;min-width:200px;margin:0">
+        <input type="text" id="addInput" class="search-input" placeholder="Ajouter un prénom…">
+        <button class="search-btn" id="addBtn" onclick="addPrenom()">Ajouter</button>
+      </div>
+      <button class="btn-ghost-light" onclick="clearAll()" style="white-space:nowrap">Tout effacer</button>
+    </div>
+    <div class="quick-tags" style="margin-top:.7rem;justify-content:flex-start">
+      <span style="font-size:.68rem;color:var(--ink-3);align-self:center">Essayer :</span>
+      <button class="qtag" onclick="quickAdd('Léa')">Léa</button>
+      <button class="qtag" onclick="quickAdd('Emma')">Emma</button>
+      <button class="qtag" onclick="quickAdd('Gabriel')">Gabriel</button>
+      <button class="qtag" onclick="quickAdd('Alma')">Alma</button>
+      <button class="qtag" onclick="quickAdd('Malo')">Malo</button>
+    </div>
+    <p id="slotsInfo" style="font-size:.72rem;color:var(--ink-3);margin-top:.5rem"></p>
+  </div>
+</div>
+
+<div style="max-width:1080px;margin:0 auto;padding:1.5rem">
+  <div id="winnerArea"></div>
+  <div class="comp-grid" id="compGrid" style="grid-template-columns:1fr">
+    <div class="empty-state">
+      <div class="empty-icon">◫</div>
+      <h3 class="empty-title">Aucun prénom à comparer</h3>
+      <p class="empty-sub">Ajoutez 2 à 4 prénoms pour les comparer instantanément.</p>
+    </div>
+  </div>
+</div>
+
+<script src="app.js"></script>
+<script>
+const MAX = 4;
+let prenoms = [];
+const inp = document.getElementById('addInput');
+inp.addEventListener('keydown', e => { if (e.key === 'Enter') addPrenom(); });
+function quickAdd(n) { inp.value = n; addPrenom(); }
+
+function updateSlots() {
+  const si = document.getElementById('slotsInfo');
+  if (!prenoms.length) { si.textContent = ''; return; }
+  const rem = MAX - prenoms.length;
+  si.textContent = `${prenoms.length} prénom${prenoms.length > 1 ? 's' : ''} ajouté${prenoms.length > 1 ? 's' : ''} — ${rem > 0 ? rem + ' emplacement' + (rem > 1 ? 's' : '') + ' disponible' + (rem > 1 ? 's' : '') : 'Maximum atteint'}`;
+}
+
+function updateGrid() {
+  const grid = document.getElementById('compGrid');
+  const wa = document.getElementById('winnerArea');
+  if (!prenoms.length) {
+    grid.style.gridTemplateColumns = '1fr';
+    grid.innerHTML = `<div class="empty-state"><div class="empty-icon">◫</div><h3 class="empty-title">Aucun prénom à comparer</h3><p class="empty-sub">Ajoutez 2 à 4 prénoms pour les comparer.</p></div>`;
+    wa.innerHTML = '';
+    updateSlots(); return;
+  }
+  const n = prenoms.length;
+  grid.style.gridTemplateColumns = n <= 2 ? `repeat(${n},1fr)` : n === 3 ? 'repeat(3,1fr)' : 'repeat(2,1fr)';
+  grid.innerHTML = prenoms.map((p, i) => renderCard(p, i)).join('');
+  updateWinner();
+  updateSlots();
+}
+
+function scoreVal(txt) { const m = String(txt).match(/\d+/); return m ? parseInt(m[0]) : 5; }
+const critLabels = { harmonie_sonore: 'Harmonie', originalite: 'Originalité', intemporalite: 'Intemporalité', facilite_internationale: 'International' };
+
+function renderCard(p, i) {
+  if (p.loading) return `<div class="comp-card"><div class="comp-head"><div><div class="comp-head-name">${p.query}</div><div class="comp-head-sub">Analyse…</div></div></div><div class="comp-body"><div class="loading-bar-wrap"><div class="loading-bar"></div></div><p class="loading-text">Recherche en cours…</p></div></div>`;
+  const d = p.data;
+  const scores = d.criteres || {};
+  const total = Object.values(scores).reduce((s, v) => s + scoreVal(v), 0);
+  const scoresHTML = Object.entries(scores).map(([k, v]) => `<div class="score-bar-row" style="margin-bottom:.4rem"><span class="score-bar-label" style="font-size:.68rem;width:100px">${critLabels[k] || k}</span><div class="score-bar-bg"><div class="score-bar-fill" style="width:${scoreVal(v) * 10}%"></div></div><span class="score-bar-val">${scoreVal(v)}</span></div>`).join('');
+  return `<div class="comp-card" style="animation-delay:${i * .08}s">
+    <div class="comp-head">
+      <div><div class="comp-head-name">${d.prenom}</div><div class="comp-head-sub">${d.origine} · ${d.rang_actuel_france || ''}</div></div>
+      <button class="remove-btn" onclick="removePrenom(${i})">×</button>
+    </div>
+    <div class="comp-body">
+      <div class="comp-row"><div class="comp-row-label">Genre & tendance</div><div class="comp-row-val">${genderBadge(d.genre)} ${trendBadge(d.tendance)}</div></div>
+      <div class="comp-row"><div class="comp-row-label">Signification</div><div class="comp-row-val" style="font-size:.8rem;line-height:1.55">${d.signification}</div></div>
+      <div class="comp-row"><div class="comp-row-label">Phonétique · Longueur</div><div class="comp-row-val">${d.phonetique || '—'} · ${d.longueur || '—'}</div></div>
+      <div class="comp-row"><div class="comp-row-label">Scores détaillés</div><div style="margin-top:.4rem">${scoresHTML}</div><div style="font-size:.7rem;color:var(--gold);font-weight:500;margin-top:.4rem">Score global : ${total}/40</div></div>
+      ${(d.diminutifs || []).length ? `<div class="comp-row"><div class="comp-row-label">Diminutifs</div><div>${d.diminutifs.map(x => `<span class="badge badge-neutral" style="margin:.1rem">${x}</span>`).join('')}</div></div>` : ''}
+    </div>
+  </div>`;
+}
+
+function updateWinner() {
+  const wa = document.getElementById('winnerArea');
+  const ready = prenoms.filter(p => !p.loading && p.data);
+  if (ready.length < 2) { wa.innerHTML = ''; return; }
+  const scored = ready.map(p => ({ name: p.data.prenom, score: Object.values(p.data.criteres || {}).reduce((s, v) => s + scoreVal(v), 0) })).sort((a, b) => b.score - a.score);
+  wa.innerHTML = `<div class="winner-bar"><div class="winner-bar-label"><strong>✦ Meilleur score global</strong>Basé sur 4 critères : harmonie, originalité, intemporalité, facilité internationale</div><div class="winner-name">${scored[0].name}</div></div>`;
+}
+
+async function addPrenom() {
+  const q = inp.value.trim();
+  if (!q) return;
+  if (prenoms.length >= MAX) { alert('Maximum 4 prénoms.'); return; }
+  if (prenoms.find(p => p.query.toLowerCase() === q.toLowerCase())) { inp.value = ''; return; }
+  inp.value = '';
+  document.getElementById('addBtn').disabled = true;
+  const slot = { query: q, loading: true, data: null };
+  prenoms.push(slot);
+  updateGrid();
+  try {
+    slot.data = await callClaude(`Analyse le prénom "${q}". Réponds UNIQUEMENT en JSON sans markdown:
+{"prenom":"forme officielle","genre":"féminin|masculin|mixte","origine":"ex: latin","tendance":"montant|stable|déclinant","signification":"1 phrase","rang_actuel_france":"ex: Top 20","phonetique":"douce|forte|neutre","longueur":"court|moyen|long","diminutifs":["d1","d2"],"criteres":{"harmonie_sonore":"8","originalite":"6","intemporalite":"9","facilite_internationale":"7"}}`);
+    slot.loading = false;
+  } catch(e) { prenoms = prenoms.filter(p => p !== slot); }
+  document.getElementById('addBtn').disabled = false;
+  updateGrid();
+}
+
+function removePrenom(i) { prenoms.splice(i, 1); updateGrid(); }
+function clearAll() { prenoms = []; updateGrid(); }
+</script>
+</body>
+</html>
