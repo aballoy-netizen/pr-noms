@@ -73,13 +73,8 @@
   </main>
   <aside class="page-sidebar">
     <div style="background:var(--white);border:1px solid var(--border);border-radius:var(--radius);padding:1.1rem">
-      <p class="sidebar-section-title">Tendances 2025</p>
-      <a class="sidebar-link" href="?q=Alma" onclick="qs('Alma');return false">Alma ↑</a>
-      <a class="sidebar-link" href="?q=Gabriel" onclick="qs('Gabriel');return false">Gabriel</a>
-      <a class="sidebar-link" href="?q=Léonie" onclick="qs('Léonie');return false">Léonie ↑</a>
-      <a class="sidebar-link" href="?q=Raphaël" onclick="qs('Raphaël');return false">Raphaël</a>
-      <a class="sidebar-link" href="?q=Adèle" onclick="qs('Adèle');return false">Adèle ↑</a>
-      <a class="sidebar-link" href="?q=Malo" onclick="qs('Malo');return false">Malo ↑</a>
+      <p class="sidebar-section-title" id="sidebarTrendTitle" data-i18n="tendances_2025">Tendances 2025</p>
+      <div id="sidebarTrends"></div>
     </div>
     <div class="ad-slot ad-slot-160" style="width:100%;height:220px">AdSense 160×600</div>
     <div style="background:var(--gold-pale);border:1px solid var(--gold-l);border-radius:var(--radius);padding:1rem;text-align:center">
@@ -98,6 +93,23 @@ const btn = document.getElementById('searchBtn');
 inp.addEventListener('keydown', e => { if (e.key === 'Enter') doSearch(); });
 
 function qs(name) { inp.value = name; doSearch(); }
+
+// Sidebar trends dynamiques selon le pays
+function refreshSidebarTrends() {
+  var el = document.getElementById('sidebarTrends');
+  if (!el) return;
+  var lang = window._LANG || 'fr';
+  var pd = (typeof PRENOMS_DEFAUT !== 'undefined' && PRENOMS_DEFAUT[lang]) ? PRENOMS_DEFAUT[lang] : null;
+  var prenoms = pd ? pd.filles.slice(0,3).concat(pd.garcons.slice(0,3)) : ['Alma','Gabriel','Léonie','Raphaël','Adèle','Malo'];
+  el.innerHTML = prenoms.map(function(p) {
+    return '<a class="sidebar-link" href="?q=' + encodeURIComponent(p) + '" onclick="qs('' + p + '');return false">' + p + '</a>';
+  }).join('');
+  // Mettre à jour le titre
+  var title = document.getElementById('sidebarTrendTitle');
+  if (title && typeof t === 'function') title.textContent = t('tendances_2025') || 'Tendances 2025';
+}
+refreshSidebarTrends();
+window.addEventListener('paysChanged', refreshSidebarTrends);
 
 // Tags dynamiques selon la langue — mis à jour au changement de pays
 function refreshRechercheQuickTags() {
