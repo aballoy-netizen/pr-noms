@@ -61,24 +61,24 @@
 
 <div class="page-header"><div class="container">
   <div>
-    <p class="page-tag">✦ Sondage famille</p>
-    <h1 class="page-title">Créez un sondage <em>à partager</em></h1>
-    <p class="page-sub">Faites voter votre entourage sur vos prénoms favoris</p>
+    <p class="page-tag" data-i18n="page_tag_sondage">✦ Sondage famille</p>
+    <h1 class="page-title" data-i18n="page_title_sondage">Créez un sondage <em>à partager</em></h1>
+    <p class="page-sub" data-i18n="page_sub_sondage">Faites voter votre entourage sur vos prénoms favoris</p>
   </div>
 </div></div>
 
 <div style="max-width:680px;margin:0 auto;padding:1.5rem">
 
   <div class="step-indicator">
-    <div class="step-tab active" id="t1">1 · Créer</div>
-    <div class="step-tab" id="t2">2 · Partager</div>
-    <div class="step-tab" id="t3">3 · Résultats</div>
+    <div class="step-tab active" id="t1" data-i18n="step1">1 · Créer</div>
+    <div class="step-tab" id="t2" data-i18n="step2">2 · Partager</div>
+    <div class="step-tab" id="t3" data-i18n="step3">3 · Résultats</div>
   </div>
 
   <!-- ÉTAPE 1 -->
   <div id="s1">
     <div class="card" style="margin-bottom:1rem">
-      <h3 class="card-title">Informations du sondage</h3>
+      <h3 class="card-title" data-i18n="infos_sondage">Informations du sondage</h3>
       <div class="form-group">
         <label class="form-label">Titre</label>
         <input type="text" id="pollTitle" class="form-input" value="Quel prénom pour notre bébé ?">
@@ -110,7 +110,7 @@
     </div>
 
     <div style="display:flex;justify-content:flex-end">
-      <button class="btn-ink" onclick="goStep2()">Continuer → Partager</button>
+      <button class="btn-ink" onclick="goStep2()" data-i18n="continuer">Continuer → Partager</button>
     </div>
   </div>
 

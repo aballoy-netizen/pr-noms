@@ -49,9 +49,9 @@
 
 <div class="page-header"><div class="container">
   <div>
-    <p class="page-tag">✦ Tendances</p>
-    <h1 class="page-title">Évolution de la <em>popularité</em> dans le temps</h1>
-    <p class="page-sub">Comparez jusqu'à 6 prénoms sur un même graphique interactif</p>
+    <p class="page-tag" data-i18n="page_tag_tendances">✦ Tendances</p>
+    <h1 class="page-title" data-i18n="page_title_tendances">Évolution de la <em>popularité</em> dans le temps</h1>
+    <p class="page-sub" data-i18n="page_sub_tendances">Comparez jusqu'à 6 prénoms sur un même graphique interactif</p>
   </div>
 </div></div>
 
@@ -59,13 +59,13 @@
   <div class="container">
     <div style="display:flex;gap:.6rem;flex-wrap:wrap;align-items:center">
       <div class="search-bar-wrap" style="flex:1;min-width:200px;margin:0">
-        <input type="text" id="tInput" class="search-input" placeholder="Ajouter un prénom à analyser…">
-        <button class="search-btn" id="tBtn" onclick="addTrend()">Analyser</button>
+        <input type="text" id="tInput" class="search-input" data-i18n="add_trend_placeholder" placeholder="Ajouter un prénom à analyser…">
+        <button class="search-btn" id="tBtn" onclick="addTrend()" data-i18n="analyser_btn">Analyser</button>
       </div>
-      <button class="btn-ghost-light" onclick="clearAll()" style="white-space:nowrap">Tout effacer</button>
+      <button class="btn-ghost-light" onclick="clearAll()" style="white-space:nowrap" data-i18n="tout_effacer">Tout effacer</button>
     </div>
     <div class="quick-tags" style="margin-top:.7rem;justify-content:flex-start">
-      <span style="font-size:.68rem;color:var(--ink-3);align-self:center">Suggestions :</span>
+      <span style="font-size:.68rem;color:var(--ink-3);align-self:center" data-i18n="suggestions">Suggestions :</span>
       <div id="tendancesTags"></div>
     </div>
     <div id="loadArea" style="display:none;margin-top:.6rem">
@@ -78,7 +78,7 @@
 <div style="max-width:960px;margin:0 auto;padding:1.5rem">
   <div class="card" style="margin-bottom:1rem">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;flex-wrap:wrap;gap:.5rem">
-      <h3 style="font-family:var(--font-serif);font-size:1.1rem;font-weight:300;color:var(--ink)">Popularité estimée — naissances en France</h3>
+      <h3 style="font-family:var(--font-serif);font-size:1.1rem;font-weight:300;color:var(--ink)">${typeof t!=='undefined'?t('chart_title'):'Popularité estimée — naissances dans votre pays'}</h3>
     </div>
     <div id="legendArea" style="display:flex;gap:1rem;flex-wrap:wrap;margin-bottom:1rem"></div>
     <div id="chartWrap">

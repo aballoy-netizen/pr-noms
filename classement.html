@@ -38,9 +38,9 @@
 
 <div class="page-header"><div class="container">
   <div>
-    <p class="page-tag">✦ Palmarès</p>
-    <h1 class="page-title">Classement des prénoms <em>par année ou période</em></h1>
-    <p class="page-sub">Top 20 des prénoms les plus donnés en France</p>
+    <p class="page-tag" data-i18n="page_tag_classement">✦ Palmarès</p>
+    <h1 class="page-title" data-i18n="page_title_classement">Classement des prénoms <em>par année ou période</em></h1>
+    <p class="page-sub" data-i18n="page_sub_classement">Top 20 des prénoms les plus donnés en France</p>
   </div>
 </div></div>
 
@@ -50,8 +50,8 @@
       <div style="display:flex;gap:.75rem;flex-wrap:wrap;align-items:center">
         <span style="font-size:.65rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);font-weight:500">Mode</span>
         <div class="seg-ctrl">
-          <button class="seg-btn active" id="modeA" onclick="setMode('annee')">Année</button>
-          <button class="seg-btn" id="modeP" onclick="setMode('periode')">Période</button>
+          <button class="seg-btn active" id="modeA" onclick="setMode('annee')" data-i18n="annee_label">Année</button>
+          <button class="seg-btn" id="modeP" onclick="setMode('periode')" data-i18n="periode_label">Période</button>
         </div>
       </div>
       <div id="anneeRow" style="display:flex;gap:.6rem;align-items:center;flex-wrap:wrap">
@@ -70,7 +70,7 @@
         <button class="qtag" id="gF" onclick="setGenre('f')">♀ Filles</button>
         <button class="qtag" id="gM" onclick="setGenre('m')">♂ Garçons</button>
       </div>
-      <div><button class="btn-ink" id="goBtn" onclick="doClassement()">Voir le classement →</button></div>
+      <div><button class="btn-ink" id="goBtn" onclick="doClassement()" data-i18n="voir_btn">Voir le classement →</button></div>
     </div>
   </div>
 </div>
@@ -117,7 +117,7 @@ function setGenre(g) {
 
 async function doClassement() {
   const btn = document.getElementById('goBtn');
-  btn.disabled = true; btn.textContent = 'Chargement…';
+  btn.disabled = true; btn.textContent = (typeof t!=='undefined'?t('chargement_btn'):'Chargement…');
   const area = document.getElementById('mainArea');
   showLoading(area, 'Génération du classement en cours…');
 
@@ -138,7 +138,7 @@ async function doClassement() {
 Exactement 20 entrées. variation = évolution rang vs période précédente (positif=progression, négatif=recul). Sois historiquement réaliste.`, 2000);
     renderClassement(data, periodLabel);
   } catch(e) { showError(area); }
-  btn.disabled = false; btn.textContent = 'Voir le classement →';
+  btn.disabled = false; btn.textContent = (typeof t!=='undefined'?t('voir_btn'):'Voir le classement →');
 }
 
 function renderClassement(data, label) {

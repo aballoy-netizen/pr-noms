@@ -55,33 +55,33 @@
 
 <div class="page-header"><div class="container">
   <div>
-    <p class="page-tag">✦ Analyse prénom / nom</p>
-    <h1 class="page-title">Harmonie du <em>nom complet</em></h1>
-    <p class="page-sub">Phonétique, initiales, consonance, fluidité — analyse complète par l'IA</p>
+    <p class="page-tag" data-i18n="page_tag_harmonie">✦ Analyse prénom / nom</p>
+    <h1 class="page-title" data-i18n="page_title_harmonie">Harmonie du <em>nom complet</em></h1>
+    <p class="page-sub" data-i18n="page_sub_harmonie">Phonétique, initiales, consonance, fluidité — analyse complète par l'IA</p>
   </div>
 </div></div>
 
 <div style="max-width:720px;margin:0 auto;padding:1.5rem">
 
   <div class="card" style="margin-bottom:1rem">
-    <h3 class="card-title">Votre nom de famille</h3>
+    <h3 class="card-title" data-i18n="nom_famille_titre">Votre nom de famille</h3>
     <div class="form-group">
       <label class="form-label">Nom de famille</label>
-      <input type="text" id="nomFamille" class="form-input" placeholder="Ex : Dupont, Martin, Beaumont…">
+      <input type="text" id="nomFamille" class="form-input" data-i18n="nom_famille_placeholder" placeholder="Ex : Dupont, Martin, Beaumont…">
     </div>
   </div>
 
   <div class="card" style="margin-bottom:1rem">
-    <h3 class="card-title">Prénoms à analyser</h3>
+    <h3 class="card-title" data-i18n="prenoms_analyser">Prénoms à analyser</h3>
     <p style="font-size:.8rem;color:var(--ink-3);margin-bottom:.85rem;margin-top:-.6rem">Ajoutez jusqu'à 5 prénoms pour les comparer avec le même nom de famille</p>
     <div id="prenomList">
       <div class="prenom-row"><span class="prenom-num">I</span><input class="form-input" type="text" placeholder="Prénom 1" style="border-radius:var(--radius-pill)"><button onclick="delRow(this)" style="background:none;border:1px solid var(--border);color:var(--ink-3);width:30px;height:30px;border-radius:50%;cursor:pointer;flex-shrink:0;font-size:1rem;display:flex;align-items:center;justify-content:center;transition:.15s">×</button></div>
       <div class="prenom-row"><span class="prenom-num">II</span><input class="form-input" type="text" placeholder="Prénom 2" style="border-radius:var(--radius-pill)"><button onclick="delRow(this)" style="background:none;border:1px solid var(--border);color:var(--ink-3);width:30px;height:30px;border-radius:50%;cursor:pointer;flex-shrink:0;font-size:1rem;display:flex;align-items:center;justify-content:center;transition:.15s">×</button></div>
     </div>
-    <button onclick="addRow()" style="width:100%;background:none;border:1px dashed var(--border);color:var(--ink-3);padding:.5rem;border-radius:var(--radius-pill);cursor:pointer;font-size:.78rem;margin-top:.5rem;transition:.15s">+ Analyser un autre prénom</button>
+    <button onclick="addRow()" style="width:100%;background:none;border:1px dashed var(--border);color:var(--ink-3);padding:.5rem;border-radius:var(--radius-pill);cursor:pointer;font-size:.78rem;margin-top:.5rem;transition:.15s" data-i18n="ajouter_autre">+ Analyser un autre prénom</button>
   </div>
 
-  <button class="btn-ink" id="analyseBtn" onclick="doAnalyse()" style="width:100%;padding:.85rem;margin-bottom:1.5rem">Analyser l'harmonie ✦</button>
+  <button class="btn-ink" id="analyseBtn" onclick="doAnalyse()" style="width:100%;padding:.85rem;margin-bottom:1.5rem" data-i18n="analyser_harmonie">Analyser l'harmonie ✦</button>
 
   <div id="resultArea"></div>
 </div>
@@ -128,7 +128,7 @@ async function doAnalyse() {
 Score sur 10. Phonétiquement rigoureux.`, 2000);
     renderAnalyse(data, nom);
   } catch(e) { showError(area); }
-  btn.disabled = false; btn.textContent = 'Analyser l\'harmonie ✦';
+  btn.disabled = false; btn.textContent = (typeof t!=='undefined'?t('analyser_harmonie'):"Analyser l'harmonie ✦");
 }
 
 const critLabels = { fluidite_phonetique:'Fluidité phonétique', harmonie_sonore:'Harmonie sonore', initiales:'Qualité des initiales', longueur_equilibre:'Équilibre des longueurs', facilite_internationale:'Facilité internationale' };
