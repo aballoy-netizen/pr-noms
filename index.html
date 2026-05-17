@@ -52,15 +52,15 @@
 
 <section class="tools-section" id="outils">
   <div class="container">
-    <p class="section-micro">✦ 6 outils</p>
+    <p class="section-micro" data-i18n="outils_titre">✦ 6 outils</p>
     <h2 class="section-title" data-i18n="tools_title">Tout pour <em>bien choisir</em></h2>
-    <div class="tools-grid">
-      <a href="recherche.html" class="tool-card"><div class="tool-icon">◈</div><h3 class="tool-title">Recherche & Analyse</h3><p class="tool-desc">Signification, étymologie, popularité, phonétique et critères de choix.</p><span class="tool-arrow">Explorer →</span></a>
-      <a href="comparer.html" class="tool-card"><div class="tool-icon">◫</div><h3 class="tool-title">Comparateur</h3><p class="tool-desc">Comparez jusqu'à 4 prénoms côte à côte avec scores détaillés.</p><span class="tool-arrow">Comparer →</span></a>
-      <a href="classement.html" class="tool-card"><div class="tool-icon">◉</div><h3 class="tool-title">Classement</h3><p class="tool-desc">Palmarès par année ou période dans votre pays.</p><span class="tool-arrow">Voir le top →</span></a>
-      <a href="tendances.html" class="tool-card"><div class="tool-icon">◌</div><h3 class="tool-title">Tendances</h3><p class="tool-desc">Courbes d'évolution depuis 1990, jusqu'à 6 prénoms simultanés.</p><span class="tool-arrow">Analyser →</span></a>
-      <a href="harmonie.html" class="tool-card"><div class="tool-icon">◎</div><h3 class="tool-title">Harmonie</h3><p class="tool-desc">Analyse phonétique : fluidité, initiales et consonance.</p><span class="tool-arrow">Tester →</span></a>
-      <a href="sondage.html" class="tool-card"><div class="tool-icon">◐</div><h3 class="tool-title">Sondage famille</h3><p class="tool-desc">Créez un sondage et partagez-le avec vos proches.</p><span class="tool-arrow">Créer →</span></a>
+    <div class="tools-grid" id="toolsGrid">
+      <a href="recherche.html" class="tool-card"><div class="tool-icon">◈</div><h3 class="tool-title" data-i18n="tool1_titre">Recherche & Analyse</h3><p class="tool-desc" data-i18n="tool1_desc">Signification, étymologie, popularité, phonétique et critères de choix.</p><span class="tool-arrow" data-i18n="tool1_btn">Explorer →</span></a>
+      <a href="comparer.html" class="tool-card"><div class="tool-icon">◫</div><h3 class="tool-title" data-i18n="tool2_titre">Comparateur</h3><p class="tool-desc" data-i18n="tool2_desc">Comparez jusqu'à 4 prénoms côte à côte avec scores détaillés.</p><span class="tool-arrow" data-i18n="tool2_btn">Comparer →</span></a>
+      <a href="classement.html" class="tool-card"><div class="tool-icon">◉</div><h3 class="tool-title" data-i18n="tool3_titre">Classement</h3><p class="tool-desc" data-i18n="tool3_desc">Palmarès par année ou période dans votre pays.</p><span class="tool-arrow" data-i18n="tool3_btn">Voir le top →</span></a>
+      <a href="tendances.html" class="tool-card"><div class="tool-icon">◌</div><h3 class="tool-title" data-i18n="tool4_titre">Tendances</h3><p class="tool-desc" data-i18n="tool4_desc">Courbes d'évolution depuis 1990, jusqu'à 6 prénoms simultanés.</p><span class="tool-arrow" data-i18n="tool4_btn">Analyser →</span></a>
+      <a href="harmonie.html" class="tool-card"><div class="tool-icon">◎</div><h3 class="tool-title" data-i18n="tool5_titre">Harmonie</h3><p class="tool-desc" data-i18n="tool5_desc">Analyse phonétique : fluidité, initiales et consonance.</p><span class="tool-arrow" data-i18n="tool5_btn">Tester →</span></a>
+      <a href="sondage.html" class="tool-card"><div class="tool-icon">◐</div><h3 class="tool-title" data-i18n="tool6_titre">Sondage famille</h3><p class="tool-desc" data-i18n="tool6_desc">Créez un sondage et partagez-le avec vos proches.</p><span class="tool-arrow" data-i18n="tool6_btn">Créer →</span></a>
     </div>
   </div>
 </section>
@@ -113,6 +113,8 @@
 <script>
 // Fonction de mise à jour du trending et des quick tags — appelée au chargement ET au changement de pays
 function refreshHomeDynamic() {
+  // Traduire tous les éléments data-i18n
+  if (typeof applyTranslations === 'function') applyTranslations();
   // Quick tags hero
   var tagsEl = document.getElementById('homeQuickTags');
   if (tagsEl && typeof getPrenomsSuggeres === 'function') {
