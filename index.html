@@ -40,12 +40,7 @@
         <button class="search-btn" onclick="quickSearch()" data-i18n="search_btn">Analyser</button>
       </div>
       <div class="quick-tags" style="margin-top:.6rem">
-        <button class="qtag" onclick="setSearch('Alma')">Alma</button>
-        <button class="qtag" onclick="setSearch('Gabriel')">Gabriel</button>
-        <button class="qtag" onclick="setSearch('Léonie')">Léonie</button>
-        <button class="qtag" onclick="setSearch('Raphaël')">Raphaël</button>
-        <button class="qtag" onclick="setSearch('Iris')">Iris</button>
-        <button class="qtag" onclick="setSearch('Malo')">Malo</button>
+          <div id="homeQuickTags"></div>
       </div>
     </div>
     <div class="hero-cta" style="margin-top:1.25rem">
@@ -80,11 +75,7 @@
     </div>
     <div class="trending-compact">
       <p class="section-micro" style="margin-bottom:.65rem">✦ <span data-i18n="trending_title">Prénoms en vogue</span></p>
-      <div class="trending-row">
-        <div class="trending-group"><span class="tcol-dot tcol-dot-f"></span><a href="recherche.html?q=Alma" class="tlink">Alma ↑</a><a href="recherche.html?q=Léonie" class="tlink">Léonie ↑</a><a href="recherche.html?q=Adèle" class="tlink">Adèle</a><a href="recherche.html?q=Iris" class="tlink">Iris</a></div>
-        <div class="trending-group"><span class="tcol-dot tcol-dot-m"></span><a href="recherche.html?q=Gabriel" class="tlink">Gabriel</a><a href="recherche.html?q=Raphaël" class="tlink">Raphaël</a><a href="recherche.html?q=Malo" class="tlink">Malo ↑</a><a href="recherche.html?q=Arthur" class="tlink">Arthur</a></div>
-        <div class="trending-group"><span class="tcol-dot tcol-dot-mx"></span><a href="recherche.html?q=Eden" class="tlink">Eden ↑</a><a href="recherche.html?q=Nour" class="tlink">Nour</a><a href="recherche.html?q=Sasha" class="tlink">Sasha</a><a href="recherche.html?q=Lior" class="tlink">Lior ↑</a></div>
-      </div>
+      <div class="trending-row" id="homeTrendingRow"></div>
     </div>
   </div>
 </section>
@@ -120,6 +111,43 @@
 <script src="i18n.js"></script>
 <script src="app.js"></script>
 <script>
+// Init dynamique selon la langue
+(function initHome() {
+  // Quick tags hero
+  var tagsEl = document.getElementById('homeQuickTags');
+  if (tagsEl && typeof getPrenomsSuggeres === 'function') {
+    getPrenomsSuggeres().forEach(function(p) {
+      var b = document.createElement('button');
+      b.className = 'qtag'; b.textContent = p;
+      b.onclick = function() { setSearch(p); };
+      tagsEl.appendChild(b);
+    });
+  }
+  // Trending row
+  var trendEl = document.getElementById('homeTrendingRow');
+  if (trendEl && typeof PRENOMS_DEFAUT !== 'undefined') {
+    var lang = window._LANG || 'fr';
+    var pd = PRENOMS_DEFAUT[lang] || PRENOMS_DEFAUT['fr'];
+    var classes = ['tcol-dot-f','tcol-dot-m','tcol-dot-mx'];
+    var listes = [pd.filles.slice(0,4), pd.garcons.slice(0,4), pd.mixtes.slice(0,4)];
+    listes.forEach(function(liste, i) {
+      var g = document.createElement('div');
+      g.className = 'trending-group';
+      var dot = document.createElement('span');
+      dot.className = 'tcol-dot ' + classes[i];
+      g.appendChild(dot);
+      liste.forEach(function(p) {
+        var a = document.createElement('a');
+        a.href = 'recherche.html?q=' + encodeURIComponent(p);
+        a.className = 'tlink';
+        a.textContent = p;
+        g.appendChild(a);
+      });
+      trendEl.appendChild(g);
+    });
+  }
+})();
+
 function quickSearch() {
   const q = document.getElementById('quickInput').value.trim();
   if (!q) return;

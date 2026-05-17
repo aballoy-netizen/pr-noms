@@ -62,11 +62,7 @@
     </div>
     <div class="quick-tags" style="margin-top:.7rem;justify-content:flex-start">
       <span style="font-size:.68rem;color:var(--ink-3);align-self:center">Essayer :</span>
-      <button class="qtag" onclick="quickAdd('Léa')">Léa</button>
-      <button class="qtag" onclick="quickAdd('Emma')">Emma</button>
-      <button class="qtag" onclick="quickAdd('Gabriel')">Gabriel</button>
-      <button class="qtag" onclick="quickAdd('Alma')">Alma</button>
-      <button class="qtag" onclick="quickAdd('Malo')">Malo</button>
+      <div id="comparerTags"></div>
     </div>
     <p id="slotsInfo" style="font-size:.72rem;color:var(--ink-3);margin-top:.5rem"></p>
   </div>
@@ -92,7 +88,20 @@ const inp = document.getElementById('addInput');
 inp.addEventListener('keydown', e => { if (e.key === 'Enter') addPrenom(); });
 function quickAdd(n) { inp.value = n; addPrenom(); }
 
-// Pré-remplir depuis ?q=
+// Tags dynamiques selon la langue
+(function() {
+  var tagsEl = document.getElementById('comparerTags');
+  if (tagsEl && typeof getPrenomsSuggeres === 'function') {
+    getPrenomsSuggeres().forEach(function(p) {
+      var b = document.createElement('button');
+      b.className = 'qtag'; b.textContent = p;
+      b.onclick = function() { quickAdd(p); };
+      tagsEl.appendChild(b);
+    });
+  }
+})();
+
+// Pré-remplir depuis ?q= (en premier)
 (function() {
   var q = new URLSearchParams(window.location.search).get('q');
   if (q) { inp.value = q; addPrenom(); }

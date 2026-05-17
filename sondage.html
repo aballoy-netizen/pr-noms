@@ -82,9 +82,9 @@
       <h3 class="card-title">Prénoms à soumettre au vote</h3>
       <p style="font-size:.8rem;color:var(--ink-3);margin-bottom:.85rem;margin-top:-.6rem">Entre 2 et 6 prénoms</p>
       <div id="slotsList">
-        <div class="prenom-slot-row"><span class="slot-num">I</span><input class="form-input" type="text" value="Léa" style="border-radius:var(--radius-pill)"><button class="slot-del" onclick="delSlot(this)">×</button></div>
-        <div class="prenom-slot-row"><span class="slot-num">II</span><input class="form-input" type="text" value="Alma" style="border-radius:var(--radius-pill)"><button class="slot-del" onclick="delSlot(this)">×</button></div>
-        <div class="prenom-slot-row"><span class="slot-num">III</span><input class="form-input" type="text" value="Iris" style="border-radius:var(--radius-pill)"><button class="slot-del" onclick="delSlot(this)">×</button></div>
+        <div class="prenom-slot-row"><span class="slot-num">I</span><input class="form-input" type="text" id="slot1" style="border-radius:var(--radius-pill)"><button class="slot-del" onclick="delSlot(this)">×</button></div>
+        <div class="prenom-slot-row"><span class="slot-num">II</span><input class="form-input" type="text" id="slot2" style="border-radius:var(--radius-pill)"><button class="slot-del" onclick="delSlot(this)">×</button></div>
+        <div class="prenom-slot-row"><span class="slot-num">III</span><input class="form-input" type="text" id="slot3" style="border-radius:var(--radius-pill)"><button class="slot-del" onclick="delSlot(this)">×</button></div>
       </div>
       <button onclick="addSlot()" style="width:100%;background:none;border:1px dashed var(--border);color:var(--ink-3);padding:.5rem;border-radius:var(--radius-pill);cursor:pointer;font-size:.78rem;margin-top:.5rem;transition:.15s">+ Ajouter un prénom</button>
     </div>
@@ -274,6 +274,17 @@ function showStep(n) {
 }
 
 function resetAll() { pollData = {}; votes = {}; voters = []; document.getElementById('winnerArea').innerHTML = ''; showStep(1); }
+// Init slots avec ?q= en premier ou prénoms du pays
+(function() {
+  var q = new URLSearchParams(window.location.search).get('q');
+  var defaults = (typeof getPrenomsSuggeres === 'function') ? getPrenomsSuggeres() : ['Léa','Alma','Iris','Gabriel','Raphaël'];
+  var s1 = document.getElementById('slot1');
+  var s2 = document.getElementById('slot2');
+  var s3 = document.getElementById('slot3');
+  if (s1) s1.value = q || defaults[0] || 'Léa';
+  if (s2) s2.value = defaults[1] || 'Alma';
+  if (s3) s3.value = defaults[2] || 'Iris';
+})();
 </script>
 </body>
 </html>

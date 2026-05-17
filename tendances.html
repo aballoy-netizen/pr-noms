@@ -55,12 +55,7 @@
     </div>
     <div class="quick-tags" style="margin-top:.7rem;justify-content:flex-start">
       <span style="font-size:.68rem;color:var(--ink-3);align-self:center">Suggestions :</span>
-      <button class="qtag" onclick="qa('Emma')">Emma</button>
-      <button class="qtag" onclick="qa('Léa')">Léa</button>
-      <button class="qtag" onclick="qa('Alice')">Alice</button>
-      <button class="qtag" onclick="qa('Gabriel')">Gabriel</button>
-      <button class="qtag" onclick="qa('Raphaël')">Raphaël</button>
-      <button class="qtag" onclick="qa('Hugo')">Hugo</button>
+      <div id="tendancesTags"></div>
     </div>
     <div id="loadArea" style="display:none;margin-top:.6rem">
       <div class="loading-bar-wrap"><div class="loading-bar"></div></div>
@@ -104,7 +99,20 @@ const inp = document.getElementById('tInput');
 inp.addEventListener('keydown', e => { if (e.key === 'Enter') addTrend(); });
 function qa(n) { inp.value = n; addTrend(); }
 
-// Pré-remplir depuis ?q=
+// Tags dynamiques
+(function() {
+  var tagsEl = document.getElementById('tendancesTags');
+  if (tagsEl && typeof getPrenomsSuggeres === 'function') {
+    getPrenomsSuggeres().forEach(function(p) {
+      var b = document.createElement('button');
+      b.className = 'qtag'; b.textContent = p;
+      b.onclick = function() { qa(p); };
+      tagsEl.appendChild(b);
+    });
+  }
+})();
+
+// Pré-remplir depuis ?q= (en premier)
 (function() {
   var q = new URLSearchParams(window.location.search).get('q');
   if (q) { inp.value = q; addTrend(); }

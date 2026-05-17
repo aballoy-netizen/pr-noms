@@ -207,12 +207,14 @@ function swapPrenom(name) {
   if (inp) { inp.value = name; doAnalyse(); }
 }
 
-// Pré-remplir depuis ?q=
+// Pré-remplir depuis ?q= (en premier) ou prénoms par défaut selon langue
 (function() {
   var q = new URLSearchParams(window.location.search).get('q');
-  if (q) {
-    var inp = document.querySelector('#prenomList .form-input');
-    if (inp) inp.value = q;
+  var inputs = document.querySelectorAll('#prenomList .form-input');
+  if (q && inputs[0]) {
+    inputs[0].value = q;
+  } else if (typeof getPrenomDefaut === 'function') {
+    inputs.forEach(function(inp, i) { inp.value = getPrenomDefaut(i); });
   }
 })();
 </script>

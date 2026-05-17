@@ -512,3 +512,31 @@ function getLangInstruction() {
   const langName = langNames[lang] || 'français';
   return `Réponds UNIQUEMENT en ${langName}. Les données de popularité doivent refléter le pays "${pays}" (adapte les statistiques, classements et tendances à ce pays spécifiquement).`;
 }
+
+// ══════════════════════════════════════════════
+//  PRÉNOMS PAR DÉFAUT SELON LE PAYS
+// ══════════════════════════════════════════════
+const PRENOMS_DEFAUT = {
+  fr: { filles: ['Alma','Léonie','Adèle','Iris','Camille'], garcons: ['Gabriel','Raphaël','Malo','Arthur','Théo'], mixtes: ['Eden','Nour','Sasha','Lior'] },
+  en: { filles: ['Olivia','Emma','Amelia','Sophia','Ava'], garcons: ['Oliver','Liam','Noah','George','Harry'], mixtes: ['Riley','Jordan','Taylor','Quinn'] },
+  es: { filles: ['Lucía','Sofía','Valentina','Isabella','Martina'], garcons: ['Santiago','Mateo','Sebastián','Alejandro','Diego'], mixtes: ['Alexis','Andrea','Camilo','Nico'] },
+  pt: { filles: ['Sofia','Ana','Beatriz','Valentina','Larissa'], garcons: ['Miguel','Arthur','Lucas','Gabriel','Pedro'], mixtes: ['Alex','Jordan','Nico','Robin'] },
+  de: { filles: ['Emma','Hannah','Mia','Lena','Lea'], garcons: ['Noah','Leon','Finn','Ben','Elias'], mixtes: ['Alex','Kai','Robin','Sasha'] },
+  ar: { filles: ['فاطمة','مريم','نور','سارة','ليلى'], garcons: ['محمد','أحمد','عمر','يوسف','علي'], mixtes: ['نور','ريم','دانا','لين'] },
+  zh: { filles: ['芳','婷','雪','梅','燕'], garcons: ['伟','明','强','军','磊'], mixtes: ['宇','晨','悦','昊'] },
+  hi: { filles: ['Aanya','Priya','Kavya','Ananya','Diya'], garcons: ['Arjun','Vihaan','Aarav','Reyansh','Sai'], mixtes: ['Ansh','Riya','Kaira','Avi'] },
+  it: { filles: ['Sofia','Giulia','Aurora','Ginevra','Emma'], garcons: ['Leonardo','Francesco','Alessandro','Lorenzo','Mattia'], mixtes: ['Alex','Nico','Robin','Sasha'] },
+};
+
+function getPrenomDefaut(index) {
+  var lang = window._LANG || 'fr';
+  var pd = PRENOMS_DEFAUT[lang] || PRENOMS_DEFAUT['fr'];
+  var all = pd.filles.concat(pd.garcons);
+  return all[index % all.length] || all[0];
+}
+
+function getPrenomsSuggeres() {
+  var lang = window._LANG || 'fr';
+  var pd = PRENOMS_DEFAUT[lang] || PRENOMS_DEFAUT['fr'];
+  return pd.filles.slice(0,3).concat(pd.garcons.slice(0,3));
+}

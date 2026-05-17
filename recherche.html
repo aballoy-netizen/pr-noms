@@ -48,16 +48,7 @@
       <input type="text" id="searchInput" class="search-input" data-i18n="search_placeholder" placeholder="Entrez un prénom…" autocomplete="off">
       <button class="search-btn" id="searchBtn" onclick="doSearch()" data-i18n="search_btn">Analyser</button>
     </div>
-    <div class="quick-tags" style="margin-top:.75rem">
-      <button class="qtag" onclick="qs('Alma')">Alma</button>
-      <button class="qtag" onclick="qs('Gabriel')">Gabriel</button>
-      <button class="qtag" onclick="qs('Léonie')">Léonie</button>
-      <button class="qtag" onclick="qs('Raphaël')">Raphaël</button>
-      <button class="qtag" onclick="qs('Iris')">Iris</button>
-      <button class="qtag" onclick="qs('Malo')">Malo</button>
-      <button class="qtag" onclick="qs('Adèle')">Adèle</button>
-      <button class="qtag" onclick="qs('Théodore')">Théodore</button>
-    </div>
+    <div class="quick-tags" style="margin-top:.75rem" id="rechercheQuickTags"></div>
   </div>
 </div>
 
@@ -96,6 +87,19 @@ const btn = document.getElementById('searchBtn');
 inp.addEventListener('keydown', e => { if (e.key === 'Enter') doSearch(); });
 
 function qs(name) { inp.value = name; doSearch(); }
+
+// Tags dynamiques selon la langue
+(function() {
+  var tagsEl = document.getElementById('rechercheQuickTags');
+  if (tagsEl && typeof getPrenomsSuggeres === 'function') {
+    getPrenomsSuggeres().forEach(function(p) {
+      var b = document.createElement('button');
+      b.className = 'qtag'; b.textContent = p;
+      b.onclick = function() { qs(p); };
+      tagsEl.appendChild(b);
+    });
+  }
+})();
 
 // Auto-search from URL
 const urlQ = getParam('q');
@@ -332,8 +336,9 @@ function renderGeoMap(d) {
   const niveauColor = ['','#a8d5a2','#c8e6b0','#f0c040','#e88040','#d94040'];
   const niveauLabel = ['','Très rare','Rare','Modéré','Fréquent','Très fréquent'];
 
+  const activeCode = (window._PAYS_CODE) || _userCountryCode || 'FR';
   const paysList = (geo.pays || []).map(p =>
-    `<option value="${p.code}" ${p.code === _userCountryCode ? 'selected' : ''}>${countryFlag(p.code)} ${p.nom}</option>`
+    `<option value="${p.code}" ${p.code === activeCode ? 'selected' : ''}>${countryFlag(p.code)} ${p.nom}</option>`
   ).join('');
 
   const legendeHTML = `<div class="geo-legend-inline">
@@ -401,11 +406,11 @@ function initMaps() {
       );
     });
 
-    // Centrer sur pays détecté
-    const userPays = (_geoData.pays || []).find(p => p.code === _userCountryCode);
-    if (userPays && _paysCentres[_userCountryCode]) {
-      _mapMonde.setView(_paysCentres[_userCountryCode], 4);
-    }
+    // Centrer sur pays de la langue sélectionnée
+    var centreCode = (window._PAYS_CODE && _paysCentres[window._PAYS_CODE]) ? window._PAYS_CODE
+                   : (_userCountryCode && _paysCentres[_userCountryCode]) ? _userCountryCode
+                   : 'FR';
+    _mapMonde.setView(_paysCentres[centreCode] || [30, 10], _paysCentres[centreCode] ? 4 : 2);
   }
 
   // Carte France
