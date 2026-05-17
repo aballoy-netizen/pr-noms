@@ -140,6 +140,8 @@ function cap(str) {
 // ── Transmission du prénom entre les onglets ──
 function updateNavLinks(prenom) {
   if (!prenom) return;
+  // Mémoriser le prénom pour toutes les pages
+  localStorage.setItem('lastPrenom', prenom);
   document.querySelectorAll('.nav-link, .logo').forEach(link => {
     try {
       var url = new URL(link.href, window.location.origin);
@@ -151,10 +153,11 @@ function updateNavLinks(prenom) {
   });
 }
 
-// Lire ?q= au chargement et pré-remplir les champs de la page
+// Lire ?q= ou localStorage et exposer le prénom à toutes les pages
 (function() {
-  var q = new URLSearchParams(window.location.search).get('q');
-  if (!q) return;
-  // Stocker pour les pages qui en ont besoin
+  var q = new URLSearchParams(window.location.search).get('q')
+       || localStorage.getItem('lastPrenom')
+       || '';
   window._prenomTransmis = q;
+  if (q) localStorage.setItem('lastPrenom', q);
 })();

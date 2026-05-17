@@ -101,9 +101,9 @@ function quickAdd(n) { inp.value = n; addPrenom(); }
   }
 })();
 
-// Pré-remplir depuis ?q= (en premier)
+// Pré-remplir depuis ?q= ou localStorage (en premier)
 (function() {
-  var q = new URLSearchParams(window.location.search).get('q');
+  var q = window._prenomTransmis || '';
   if (q) { inp.value = q; addPrenom(); }
 })();
 

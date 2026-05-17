@@ -101,8 +101,8 @@ function qs(name) { inp.value = name; doSearch(); }
   }
 })();
 
-// Auto-search from URL
-const urlQ = getParam('q');
+// Auto-search depuis URL ou localStorage
+const urlQ = getParam('q') || localStorage.getItem('lastPrenom') || '';
 if (urlQ) { inp.value = urlQ; doSearch(); }
 
 async function doSearch() {

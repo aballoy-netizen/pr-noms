@@ -207,9 +207,9 @@ function swapPrenom(name) {
   if (inp) { inp.value = name; doAnalyse(); }
 }
 
-// Pré-remplir depuis ?q= (en premier) ou prénoms par défaut selon langue
+// Pré-remplir depuis ?q= ou localStorage (en premier)
 (function() {
-  var q = new URLSearchParams(window.location.search).get('q');
+  var q = window._prenomTransmis || '';
   var inputs = document.querySelectorAll('#prenomList .form-input');
   if (q && inputs[0]) {
     inputs[0].value = q;

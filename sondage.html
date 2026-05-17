@@ -274,9 +274,9 @@ function showStep(n) {
 }
 
 function resetAll() { pollData = {}; votes = {}; voters = []; document.getElementById('winnerArea').innerHTML = ''; showStep(1); }
-// Init slots avec ?q= en premier ou prénoms du pays
+// Init slots avec ?q=/localStorage en premier ou prénoms du pays
 (function() {
-  var q = new URLSearchParams(window.location.search).get('q');
+  var q = window._prenomTransmis || '';
   var defaults = (typeof getPrenomsSuggeres === 'function') ? getPrenomsSuggeres() : ['Léa','Alma','Iris','Gabriel','Raphaël'];
   var s1 = document.getElementById('slot1');
   var s2 = document.getElementById('slot2');
