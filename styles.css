@@ -725,14 +725,18 @@ footer { background: var(--ink); padding: 3rem 0 0; }
    SÉLECTEUR PAYS / LANGUE
 ══════════════════════════════════════ */
 .pays-selector { position: relative; flex-shrink: 0; }
-.pays-btn {
-  display: flex; align-items: center; gap: .35rem;
+.pays-selector summary.pays-btn {
+  display: flex; align-items: center; gap: .35rem; list-style: none;
   background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.15);
   border-radius: var(--radius-pill); padding: .3rem .75rem;
   color: rgba(255,255,255,.85); cursor: pointer; font-family: var(--font-sans);
-  transition: var(--trans); white-space: nowrap;
+  transition: var(--trans); white-space: nowrap; user-select: none;
 }
-.pays-btn:hover { background: rgba(255,255,255,.15); border-color: rgba(255,255,255,.3); }
+.pays-selector summary.pays-btn::-webkit-details-marker { display: none; }
+.pays-selector[open] summary.pays-btn { background: rgba(255,255,255,.15); border-color: rgba(255,255,255,.3); }
+.pays-selector summary.pays-btn:hover { background: rgba(255,255,255,.15); border-color: rgba(255,255,255,.3); }
+.pays-chevron { font-size:.55rem; opacity:.6; transition: transform .2s; }
+.pays-selector[open] .pays-chevron { transform: rotate(180deg); }
 .pays-dropdown {
   position: absolute; top: calc(100% + .5rem); right: 0;
   background: var(--ink); border: 1px solid rgba(255,255,255,.12);

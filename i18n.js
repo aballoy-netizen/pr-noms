@@ -637,18 +637,7 @@ function buildPaysSelector() {
   if (nomEl) nomEl.textContent = cfg.nom;
 }
 
-function togglePaysDropdown(e) {
-  e.stopPropagation();
-  const dd = document.getElementById('paysDropdown');
-  dd.style.display = dd.style.display === 'none' ? 'block' : 'none';
-}
-
-document.addEventListener('click', (e) => {
-  const selector = document.getElementById('paysSelector');
-  if (selector && selector.contains(e.target)) return; // clic dans le sélecteur → ne pas fermer
-  const dd = document.getElementById('paysDropdown');
-  if (dd) dd.style.display = 'none';
-});
+// togglePaysDropdown n'est plus nécessaire avec <details> natif
 
 function setPays(code) {
   const cfg = PAYS_CONFIG[code];
@@ -667,9 +656,9 @@ function setPays(code) {
   document.querySelectorAll('.pays-list-item').forEach(btn => {
     btn.classList.toggle('active', btn.textContent.includes(cfg.nom));
   });
-  // Fermer dropdown
-  const dd = document.getElementById('paysDropdown');
-  if (dd) dd.style.display = 'none';
+  // Fermer le dropdown (details natif)
+  const selector = document.getElementById('paysSelector');
+  if (selector) selector.removeAttribute('open');
   // Appliquer les traductions sur la page
   applyTranslations();
   // Rafraîchir direction si arabe
