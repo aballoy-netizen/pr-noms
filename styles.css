@@ -220,10 +220,15 @@ button { font-family: var(--font-sans); cursor: pointer; }
   overflow: hidden; box-shadow: var(--shadow);
 }
 .search-input {
-  flex: 1; border: none; outline: none; background: transparent;
+  flex: 1; border: none; outline: none; background: var(--white);
   padding: .85rem 1.4rem; font-family: var(--font-sans); font-size: .95rem; color: var(--ink);
 }
 .search-input::placeholder { color: var(--ink-4); }
+/* Dans le hero uniquement : fond semi-transparent, texte clair */
+.hero .search-bar-wrap { background: rgba(255,255,255,.1); border-color: rgba(255,255,255,.2); }
+.hero .search-input { background: transparent; color: var(--cream); }
+.hero .search-input::placeholder { color: rgba(255,255,255,.45); }
+.hero .search-input:focus { background: rgba(255,255,255,.08); }
 .search-btn {
   background: var(--ink); color: var(--cream); border: none;
   padding: .85rem 1.6rem; font-family: var(--font-sans);
@@ -759,10 +764,7 @@ footer { background: var(--ink); padding: 3rem 0 0; }
 .tlink:hover { border-color: var(--gold); color: var(--gold-deep); }
 
 /* ══════════════════════════════════════
-   HERO SEARCH (HOME)
+   HERO QUICK TAGS
 ══════════════════════════════════════ */
-.hero .search-input { background: rgba(255,255,255,.08); color: var(--cream); border-color: rgba(255,255,255,.2); }
-.hero .search-input::placeholder { color: rgba(255,255,255,.4); }
-.hero .search-input:focus { border-color: var(--gold); background: rgba(255,255,255,.12); }
 .hero .qtag { background: rgba(255,255,255,.08); color: rgba(255,255,255,.7); border-color: rgba(255,255,255,.15); }
 .hero .qtag:hover { background: rgba(255,255,255,.15); color: var(--cream); border-color: rgba(255,255,255,.3); }
