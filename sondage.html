@@ -81,31 +81,31 @@
       <h3 class="card-title" data-i18n="infos_sondage">Informations du sondage</h3>
       <div class="form-group">
         <label class="form-label">Titre</label>
-        <input type="text" id="pollTitle" class="form-input" value="Quel prénom pour notre bébé ?">
+        <input type="text" id="pollTitle" class="form-input" id="pollTitleInput" value="Quel prénom pour notre bébé ?">
       </div>
       <div class="form-group">
         <label class="form-label">Message d'introduction (optionnel)</label>
-        <textarea id="pollDesc" class="form-textarea">Bébé arrive bientôt ! Aidez-nous à choisir son prénom en votant pour votre favori ✨</textarea>
+        <textarea id="pollDesc" class="form-textarea" id="pollDescInput">Bébé arrive bientôt ! Aidez-nous à choisir son prénom en votant pour votre favori ✨</textarea>
       </div>
     </div>
 
     <div class="card" style="margin-bottom:1rem">
-      <h3 class="card-title">Prénoms à soumettre au vote</h3>
-      <p style="font-size:.8rem;color:var(--ink-3);margin-bottom:.85rem;margin-top:-.6rem">Entre 2 et 6 prénoms</p>
+      <h3 class="card-title" data-i18n="prenoms_vote">Prénoms à soumettre au vote</h3>
+      <p style="font-size:.8rem;color:var(--ink-3);margin-bottom:.85rem;margin-top:-.6rem" data-i18n="entre_2_6">Entre 2 et 6 prénoms</p>
       <div id="slotsList">
         <div class="prenom-slot-row"><span class="slot-num">I</span><input class="form-input" type="text" id="slot1" style="border-radius:var(--radius-pill)"><button class="slot-del" onclick="delSlot(this)">×</button></div>
         <div class="prenom-slot-row"><span class="slot-num">II</span><input class="form-input" type="text" id="slot2" style="border-radius:var(--radius-pill)"><button class="slot-del" onclick="delSlot(this)">×</button></div>
         <div class="prenom-slot-row"><span class="slot-num">III</span><input class="form-input" type="text" id="slot3" style="border-radius:var(--radius-pill)"><button class="slot-del" onclick="delSlot(this)">×</button></div>
       </div>
-      <button onclick="addSlot()" style="width:100%;background:none;border:1px dashed var(--border);color:var(--ink-3);padding:.5rem;border-radius:var(--radius-pill);cursor:pointer;font-size:.78rem;margin-top:.5rem;transition:.15s">+ Ajouter un prénom</button>
+      <button onclick="addSlot()" style="width:100%;background:none;border:1px dashed var(--border);color:var(--ink-3);padding:.5rem;border-radius:var(--radius-pill);cursor:pointer;font-size:.78rem;margin-top:.5rem;transition:.15s" data-i18n="ajouter_prenom">+ Ajouter un prénom</button>
     </div>
 
     <div class="card" style="border-color:var(--gold-l);margin-bottom:1rem">
       <div style="display:flex;align-items:center;justify-content:space-between;gap:.75rem;margin-bottom:.5rem;flex-wrap:wrap">
-        <h3 class="card-title" style="margin-bottom:0">✦ Suggestions IA</h3>
-        <button id="aiBtn" onclick="genAI()" style="background:var(--gold-pale);border:1px solid var(--gold-l);color:var(--gold-deep);cursor:pointer;padding:.45rem .95rem;border-radius:var(--radius-pill);font-size:.72rem;font-weight:500;letter-spacing:.06em;text-transform:uppercase;white-space:nowrap;transition:.15s">Générer</button>
+        <h3 class="card-title" style="margin-bottom:0" data-i18n="suggestions_ia">✦ Suggestions IA</h3>
+        <button id="aiBtn" onclick="genAI()" style="background:var(--gold-pale);border:1px solid var(--gold-l);color:var(--gold-deep);cursor:pointer;padding:.45rem .95rem;border-radius:var(--radius-pill);font-size:.72rem;font-weight:500;letter-spacing:.06em;text-transform:uppercase;white-space:nowrap;transition:.15s" data-i18n="generer">Générer</button>
       </div>
-      <p style="font-size:.8rem;color:var(--ink-3);margin-bottom:.75rem">L'IA analyse vos prénoms et propose des alternatives harmonieuses</p>
+      <p style="font-size:.8rem;color:var(--ink-3);margin-bottom:.75rem" data-i18n="ia_analyse">L'IA analyse vos prénoms et propose des alternatives harmonieuses</p>
       <div id="aiArea"></div>
     </div>
 
@@ -285,6 +285,21 @@ function showStep(n) {
 }
 
 function resetAll() { pollData = {}; votes = {}; voters = []; document.getElementById('winnerArea').innerHTML = ''; showStep(1); }
+// Init titre et desc du sondage selon la langue
+(function() {
+  var ti = document.getElementById('pollTitleInput');
+  var di = document.getElementById('pollDescInput');
+  if (ti && typeof t === 'function') { ti.value = t('poll_title_default') || ti.value; }
+  if (di && typeof t === 'function') { di.value = t('poll_desc_default') || di.value; }
+})();
+window.addEventListener('paysChanged', function() {
+  var ti = document.getElementById('pollTitleInput');
+  var di = document.getElementById('pollDescInput');
+  if (ti && typeof t === 'function') ti.value = t('poll_title_default') || ti.value;
+  if (di && typeof t === 'function') di.value = t('poll_desc_default') || di.value;
+  if (typeof applyTranslations === 'function') applyTranslations();
+});
+
 // Init slots avec ?q=/localStorage en premier ou prénoms du pays
 (function() {
   var q = window._prenomTransmis || '';

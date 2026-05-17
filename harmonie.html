@@ -66,14 +66,14 @@
   <div class="card" style="margin-bottom:1rem">
     <h3 class="card-title" data-i18n="nom_famille_titre">Votre nom de famille</h3>
     <div class="form-group">
-      <label class="form-label">Nom de famille</label>
+      <label class="form-label" data-i18n="nom_famille_label2">Nom de famille</label>
       <input type="text" id="nomFamille" class="form-input" data-i18n="nom_famille_placeholder" placeholder="Ex : Dupont, Martin, Beaumont…">
     </div>
   </div>
 
   <div class="card" style="margin-bottom:1rem">
     <h3 class="card-title" data-i18n="prenoms_analyser">Prénoms à analyser</h3>
-    <p style="font-size:.8rem;color:var(--ink-3);margin-bottom:.85rem;margin-top:-.6rem">Ajoutez jusqu'à 5 prénoms pour les comparer avec le même nom de famille</p>
+    <p style="font-size:.8rem;color:var(--ink-3);margin-bottom:.85rem;margin-top:-.6rem">${typeof t!=='undefined'?t('prenoms_analyser_sub2'):"Ajoutez jusqu'à 5 prénoms pour les comparer avec le même nom de famille"}</p>
     <div id="prenomList">
       <div class="prenom-row"><span class="prenom-num">I</span><input class="form-input" type="text" placeholder="Prénom 1" style="border-radius:var(--radius-pill)"><button onclick="delRow(this)" style="background:none;border:1px solid var(--border);color:var(--ink-3);width:30px;height:30px;border-radius:50%;cursor:pointer;flex-shrink:0;font-size:1rem;display:flex;align-items:center;justify-content:center;transition:.15s">×</button></div>
       <div class="prenom-row"><span class="prenom-num">II</span><input class="form-input" type="text" placeholder="Prénom 2" style="border-radius:var(--radius-pill)"><button onclick="delRow(this)" style="background:none;border:1px solid var(--border);color:var(--ink-3);width:30px;height:30px;border-radius:50%;cursor:pointer;flex-shrink:0;font-size:1rem;display:flex;align-items:center;justify-content:center;transition:.15s">×</button></div>

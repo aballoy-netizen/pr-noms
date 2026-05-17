@@ -48,27 +48,27 @@
   <div class="container">
     <div style="display:flex;flex-direction:column;gap:.85rem">
       <div style="display:flex;gap:.75rem;flex-wrap:wrap;align-items:center">
-        <span style="font-size:.65rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);font-weight:500">Mode</span>
+        <span style="font-size:.65rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);font-weight:500" data-i18n="mode_label">Mode</span>
         <div class="seg-ctrl">
           <button class="seg-btn active" id="modeA" onclick="setMode('annee')" data-i18n="annee_label">Année</button>
           <button class="seg-btn" id="modeP" onclick="setMode('periode')" data-i18n="periode_label">Période</button>
         </div>
       </div>
       <div id="anneeRow" style="display:flex;gap:.6rem;align-items:center;flex-wrap:wrap">
-        <span style="font-size:.65rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);font-weight:500">Année</span>
+        <span style="font-size:.65rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);font-weight:500" data-i18n="annee_label">Année</span>
         <select id="anneeSelect" class="form-select" style="width:auto"></select>
       </div>
       <div id="periodeRow" style="display:none;gap:.6rem;align-items:center;flex-wrap:wrap">
-        <span style="font-size:.65rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);font-weight:500">De</span>
+        <span style="font-size:.65rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);font-weight:500" data-i18n="de_label">De</span>
         <select id="deSelect" class="form-select" style="width:auto"></select>
         <span style="font-size:.72rem;color:var(--ink-3)">à</span>
         <select id="aSelect" class="form-select" style="width:auto"></select>
       </div>
       <div style="display:flex;gap:.5rem;flex-wrap:wrap;align-items:center">
-        <span style="font-size:.65rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);font-weight:500">Genre</span>
-        <button class="qtag" id="gAll" onclick="setGenre('all')" style="background:var(--ink);color:var(--cream);border-color:var(--ink)">Tous</button>
-        <button class="qtag" id="gF" onclick="setGenre('f')">♀ Filles</button>
-        <button class="qtag" id="gM" onclick="setGenre('m')">♂ Garçons</button>
+        <span style="font-size:.65rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);font-weight:500" data-i18n="genre_label">Genre</span>
+        <button class="qtag" id="gAll" onclick="setGenre('all')" style="background:var(--ink);color:var(--cream);border-color:var(--ink)" data-i18n="genre_tous">Tous</button>
+        <button class="qtag" id="gF" onclick="setGenre('f')" data-i18n="genre_f">♀ Filles</button>
+        <button class="qtag" id="gM" onclick="setGenre('m')" data-i18n="genre_m">♂ Garçons</button>
       </div>
       <div><button class="btn-ink" id="goBtn" onclick="doClassement()" data-i18n="voir_btn">Voir le classement →</button></div>
     </div>
@@ -78,8 +78,8 @@
 <div style="max-width:800px;margin:0 auto;padding:1.5rem" id="mainArea">
   <div class="empty-state">
     <div class="empty-icon">◉</div>
-    <h3 class="empty-title">Choisissez vos critères</h3>
-    <p class="empty-sub">Sélectionnez une année ou une période puis cliquez sur « Voir le classement »</p>
+    <h3 class="empty-title" data-i18n="choisir_criteres">Choisissez vos critères</h3>
+    <p class="empty-sub" data-i18n="choisir_criteres_sub">Sélectionnez une année ou une période puis cliquez sur « Voir le classement »</p>
   </div>
 </div>
 
@@ -130,7 +130,8 @@ async function doClassement() {
     to = Math.max(+document.getElementById('deSelect').value, +document.getElementById('aSelect').value);
     periodLabel = `${from} – ${to}`;
   }
-  const genreLabel = genre === 'f' ? 'féminins uniquement' : genre === 'm' ? 'masculins uniquement' : 'mixte (filles et garçons)';
+  const _t = typeof t !== 'undefined' ? t : k => k;
+  const genreLabel = genre === 'f' ? (_t('genre_f') || '♀ Filles') : genre === 'm' ? (_t('genre_m') || '♂ Garçons') : (_t('genre_tous') || 'Tous');
 
   try {
     const data = await callClaude(`${getLangInstruction()} TOP 20 des prénoms ${genreLabel} pour ${from === to ? 'l\'année ' + from : 'la période ' + from + '–' + to} dans le pays sélectionné. Nous sommes en ${new Date().getFullYear()}. UNIQUEMENT JSON sans markdown:
