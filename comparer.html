@@ -37,7 +37,7 @@
     <a class="nav-link" href="tendances.html" data-i18n="tendances">Tendances</a>
     <a class="nav-link" href="harmonie.html" data-i18n="harmonie">Harmonie</a>
     <a class="nav-link" href="sondage.html" data-i18n="sondage">Sondage</a>
-    <a class="nav-link nav-premium" href="premium.html">✦ Premium</a>
+    <a class="nav-link nav-premium" href="premium.html" data-i18n="premium">✦ Premium</a>
   </div>
   <details class="pays-selector" id="paysSelector">
     <summary class="pays-btn">
@@ -196,6 +196,10 @@ async function addPrenom() {
 
 function removePrenom(i) { prenoms.splice(i, 1); updateGrid(); }
 function clearAll() { prenoms = []; updateGrid(); }
+// Traduire la nav au changement de pays
+window.addEventListener('paysChanged', function() {
+  if (typeof applyTranslations === 'function') applyTranslations();
+});
 </script>
 </body>
 </html>

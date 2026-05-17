@@ -20,13 +20,13 @@
   <a class="logo" href="index.html">Pré<span>noms</span></a>
   <button class="nav-burger" onclick="toggleMenu()"><span></span><span></span><span></span></button>
   <div class="nav-links" id="navLinks">
-    <a class="nav-link active" href="recherche.html">Rechercher</a>
-    <a class="nav-link" href="comparer.html">Comparer</a>
-    <a class="nav-link" href="classement.html">Classement</a>
-    <a class="nav-link" href="tendances.html">Tendances</a>
-    <a class="nav-link" href="harmonie.html">Harmonie</a>
-    <a class="nav-link" href="sondage.html">Sondage</a>
-    <a class="nav-link nav-premium" href="premium.html">✦ Premium</a>
+    <a class="nav-link active" href="recherche.html" data-i18n="rechercher">Rechercher</a>
+    <a class="nav-link" href="comparer.html" data-i18n="comparer">Comparer</a>
+    <a class="nav-link" href="classement.html" data-i18n="classement">Classement</a>
+    <a class="nav-link" href="tendances.html" data-i18n="tendances">Tendances</a>
+    <a class="nav-link" href="harmonie.html" data-i18n="harmonie">Harmonie</a>
+    <a class="nav-link" href="sondage.html" data-i18n="sondage">Sondage</a>
+    <a class="nav-link nav-premium" href="premium.html" data-i18n="premium">✦ Premium</a>
   </div>
   <details class="pays-selector" id="paysSelector">
     <summary class="pays-btn">
@@ -46,9 +46,9 @@
 <div class="page-header">
   <div class="container">
     <div>
-      <p class="page-tag">✦ Recherche & Analyse</p>
-      <h1 class="page-title">Analysez <em>n'importe quel prénom</em></h1>
-      <p class="page-sub">Signification, étymologie, popularité, phonétique et critères de choix</p>
+      <p class="page-tag" data-i18n="page_tag_recherche">✦ Recherche & Analyse</p>
+      <h1 class="page-title" data-i18n="page_title_recherche">Analysez <em>n'importe quel prénom</em></h1>
+      <p class="page-sub" data-i18n="page_sub_recherche">Signification, étymologie, popularité, phonétique et critères de choix</p>
     </div>
   </div>
 </div>
@@ -57,7 +57,7 @@
   <div class="container">
     <div class="search-bar-wrap">
       <input type="text" id="searchInput" class="search-input" placeholder="Entrez un prénom…" autocomplete="off">
-      <button class="search-btn" id="searchBtn" onclick="doSearch()">Analyser</button>
+      <button class="search-btn" id="searchBtn" onclick="doSearch()" data-i18n="search_btn">Analyser</button>
     </div>
     <div class="quick-tags" style="margin-top:.75rem" id="rechercheQuickTags"></div>
   </div>
@@ -110,6 +110,9 @@ function refreshSidebarTrends() {
 }
 refreshSidebarTrends();
 window.addEventListener('paysChanged', refreshSidebarTrends);
+window.addEventListener('paysChanged', function() {
+  if (typeof applyTranslations === 'function') applyTranslations();
+});
 
 // Tags dynamiques selon la langue — mis à jour au changement de pays
 function refreshRechercheQuickTags() {

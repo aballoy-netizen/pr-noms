@@ -33,13 +33,13 @@
   <a class="logo" href="index.html">Pré<span>noms</span></a>
   <button class="nav-burger" onclick="toggleMenu()"><span></span><span></span><span></span></button>
   <div class="nav-links" id="navLinks">
-    <a class="nav-link" href="recherche.html">Rechercher</a>
-    <a class="nav-link" href="comparer.html">Comparer</a>
-    <a class="nav-link" href="classement.html">Classement</a>
-    <a class="nav-link" href="tendances.html">Tendances</a>
-    <a class="nav-link" href="harmonie.html">Harmonie</a>
-    <a class="nav-link" href="sondage.html">Sondage</a>
-    <a class="nav-link nav-premium active" href="premium.html">✦ Premium</a>
+    <a class="nav-link" href="recherche.html" data-i18n="rechercher">Rechercher</a>
+    <a class="nav-link" href="comparer.html" data-i18n="comparer">Comparer</a>
+    <a class="nav-link" href="classement.html" data-i18n="classement">Classement</a>
+    <a class="nav-link" href="tendances.html" data-i18n="tendances">Tendances</a>
+    <a class="nav-link" href="harmonie.html" data-i18n="harmonie">Harmonie</a>
+    <a class="nav-link" href="sondage.html" data-i18n="sondage">Sondage</a>
+    <a class="nav-link nav-premium active" href="premium.html" data-i18n="premium">✦ Premium</a>
   </div>
   <details class="pays-selector" id="paysSelector">
     <summary class="pays-btn">
@@ -140,7 +140,7 @@
 <footer>
   <div class="footer-inner container">
     <div class="footer-brand"><a class="logo" href="index.html">Pré<span>noms</span></a><p>L'outil de référence pour choisir le prénom de votre enfant avec sérénité.</p></div>
-    <div class="footer-col"><h4>Outils</h4><a href="recherche.html">Recherche & Analyse</a><a href="comparer.html">Comparateur</a><a href="classement.html">Classement</a><a href="tendances.html">Tendances</a><a href="harmonie.html">Harmonie</a><a href="sondage.html">Sondage</a></div>
+    <div class="footer-col"><h4>Outils</h4><a href="recherche.html">Recherche & Analyse</a><a href="comparer.html">Comparateur</a><a href="classement.html" data-i18n="classement">Classement</a><a href="tendances.html" data-i18n="tendances">Tendances</a><a href="harmonie.html" data-i18n="harmonie">Harmonie</a><a href="sondage.html" data-i18n="sondage">Sondage</a></div>
     <div class="footer-col"><h4>Légal</h4><a href="#">Mentions légales</a><a href="#">Confidentialité</a><a href="#">CGU</a><a href="#">Cookies</a></div>
     <div class="footer-col"><h4>Contact</h4><a href="#">À propos</a><a href="#">Contact</a><a href="#">Blog</a><a href="#">Presse</a></div>
   </div>
@@ -148,6 +148,10 @@
 </footer>
 
 <script src="i18n.js"></script>
-<script src="app.js"></script>
+<script src="app.js">// Traduire la nav au changement de pays
+window.addEventListener('paysChanged', function() {
+  if (typeof applyTranslations === 'function') applyTranslations();
+});
+</script>
 </body>
 </html>
