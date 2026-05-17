@@ -5,7 +5,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Recherche — Prénoms</title>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
 <link rel="stylesheet" href="styles.css">
+<style>
+#map-monde, #map-france { height: 340px; border-radius: var(--radius); overflow: hidden; margin-bottom: .75rem; }
+.leaflet-popup-content { font-family: 'DM Sans', sans-serif; font-size: .85rem; }
+</style>
 </head>
 <body>
 
@@ -243,61 +248,178 @@ function renderResult(d) {
   ${renderGeoMap(d)}
 
   ${renderPersonnalites(d)}`;
+
+  // Charger Leaflet et initialiser les cartes
+  loadLeaflet(() => { setTimeout(initMaps, 100); });
 }
 
-// ── Carte de densité géographique ──
+// ── Détection pays par IP ──
+let _userCountryCode = 'FR';
+fetch('https://ipapi.co/json/')
+  .then(r => r.json())
+  .then(data => { if (data && data.country_code) _userCountryCode = data.country_code; })
+  .catch(() => {});
+
+// ── Coordonnées pays ──
+const _paysCentres = {
+  'FR':[46.2,2.2],'BE':[50.5,4.4],'CH':[46.8,8.2],'CA':[56.1,-106.3],
+  'DE':[51.1,10.4],'ES':[40.4,-3.7],'IT':[41.9,12.5],'GB':[55.4,-3.4],
+  'US':[37.1,-95.7],'BR':[-14.2,-51.9],'AR':[-38.4,-63.6],'MA':[31.8,-7.1],
+  'DZ':[28.0,1.6],'PT':[39.4,-8.2],'NL':[52.1,5.3],'RU':[61.5,105.3],
+  'JP':[36.2,138.3],'CN':[35.8,104.2],'AU':[-25.3,133.8],'SN':[14.5,-14.5],
+  'TN':[33.9,9.5],'CI':[7.5,-5.5],'CM':[7.4,12.4],'MX':[23.6,-102.6],
+  'LU':[49.8,6.1],'MC':[43.7,7.4],'QC':[53.0,-70.0]
+};
+
+// ── Régions France (centres approx) ──
+const _regionsCentres = {
+  'Île-de-France':[48.65,2.34],'Auvergne-Rhône-Alpes':[45.4,4.4],
+  'Provence-Alpes-Côte d\'Azur':[43.9,6.1],'Occitanie':[43.6,2.3],
+  'Nouvelle-Aquitaine':[44.7,0.1],'Grand Est':[48.5,7.0],
+  'Hauts-de-France':[50.3,2.8],'Bretagne':[48.2,-2.8],
+  'Normandie':[49.0,0.2],'Pays de la Loire':[47.5,-1.0],
+  'Bourgogne-Franche-Comté':[47.0,5.0],'Centre-Val de Loire':[47.5,1.7],
+  'Corse':[42.0,9.1]
+};
+
+let _leafletLoaded = false;
+let _mapMonde = null;
+let _mapFrance = null;
+let _geoData = null;
+
 function renderGeoMap(d) {
   const geo = d.densite_geo;
   if (!geo) return '';
+  _geoData = geo;
 
   const niveauColor = ['','#a8d5a2','#c8e6b0','#f0c040','#e88040','#d94040'];
   const niveauLabel = ['','Très rare','Rare','Modéré','Fréquent','Très fréquent'];
 
-  const paysHTML = (geo.pays || []).map(p => {
-    const color = niveauColor[p.niveau] || niveauColor[1];
-    const label = niveauLabel[p.niveau] || '';
-    const pct = (p.niveau / 5) * 100;
-    return `<div class="geo-row">
-      <span class="geo-flag">${countryFlag(p.code)}</span>
-      <span class="geo-name">${p.nom}</span>
-      <div class="geo-bar-bg"><div class="geo-bar-fill" style="width:${pct}%;background:${color}"></div></div>
-      <span class="geo-badge" style="background:${color}20;color:${color};border:1px solid ${color}50">${label}</span>
-    </div>`;
-  }).join('');
-
-  const regHTML = (geo.regions_france || []).map(r => {
-    const color = niveauColor[r.niveau] || niveauColor[1];
-    const label = niveauLabel[r.niveau] || '';
-    const pct = (r.niveau / 5) * 100;
-    return `<div class="geo-row">
-      <span class="geo-flag">📍</span>
-      <span class="geo-name">${r.nom}</span>
-      <div class="geo-bar-bg"><div class="geo-bar-fill" style="width:${pct}%;background:${color}"></div></div>
-      <span class="geo-badge" style="background:${color}20;color:${color};border:1px solid ${color}50">${label}</span>
-    </div>`;
-  }).join('');
+  const paysList = (geo.pays || []).map(p =>
+    `<option value="${p.code}" ${p.code === _userCountryCode ? 'selected' : ''}>${countryFlag(p.code)} ${p.nom}</option>`
+  ).join('');
 
   const legendeHTML = [1,2,3,4,5].map(n =>
     `<div class="geo-legend-item"><div class="geo-legend-dot" style="background:${niveauColor[n]}"></div><span>${niveauLabel[n]}</span></div>`
   ).join('');
 
-  return `<div class="card" style="animation:fadeUp .3s .2s ease both">
+  const listPaysHTML = buildPaysHTML(geo.pays, niveauColor, niveauLabel);
+  const listRegHTML = buildRegHTML(geo.regions_france, niveauColor, niveauLabel);
+
+  return `<div class="card" style="animation:fadeUp .3s .2s ease both" id="geo-card">
     <div class="card-label" style="margin-bottom:1rem">🗺 Présence géographique</div>
     <div class="geo-tabs">
-      <button class="geo-tab active" onclick="switchGeoTab(this,'geo-pays')">Par pays</button>
-      <button class="geo-tab" onclick="switchGeoTab(this,'geo-regions')">Régions France</button>
+      <button class="geo-tab active" onclick="switchGeoTab(this,'geo-panel-monde')">🌍 Monde</button>
+      <button class="geo-tab" onclick="switchGeoTab(this,'geo-panel-france')">🇫🇷 Régions France</button>
     </div>
-    <div class="geo-legend">${legendeHTML}</div>
-    <div id="geo-pays" class="geo-panel">${paysHTML}</div>
-    <div id="geo-regions" class="geo-panel" style="display:none">${regHTML}</div>
+
+    <div id="geo-panel-monde">
+      <div style="display:flex;align-items:center;gap:.6rem;margin-bottom:.75rem;flex-wrap:wrap">
+        <span style="font-size:.72rem;color:var(--ink-3)">Centrer sur :</span>
+        <select class="form-select" style="width:auto;padding:.3rem .8rem;font-size:.8rem;border-radius:var(--radius-pill)" onchange="centerMapOn(this.value)">
+          ${paysList}
+          <option value="__monde__">🌍 Vue monde entier</option>
+        </select>
+      </div>
+      <div class="geo-legend">${legendeHTML}</div>
+      <div id="map-monde"></div>
+      <div style="margin-top:.75rem">${listPaysHTML}</div>
+    </div>
+
+    <div id="geo-panel-france" style="display:none">
+      <div class="geo-legend">${legendeHTML}</div>
+      <div id="map-france"></div>
+      <div style="margin-top:.75rem">${listRegHTML}</div>
+    </div>
   </div>`;
+}
+
+function initMaps() {
+  if (!window.L || !_geoData) return;
+  const niveauColor = ['','#a8d5a2','#c8e6b0','#f0c040','#e88040','#d94040'];
+  const niveauLabel = ['','Très rare','Rare','Modéré','Fréquent','Très fréquent'];
+
+  // Carte monde
+  if (!_mapMonde && document.getElementById('map-monde')) {
+    _mapMonde = L.map('map-monde', {zoomControl:true, scrollWheelZoom:false}).setView([30,10], 2);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution:'© OpenStreetMap', maxZoom:10
+    }).addTo(_mapMonde);
+
+    (_geoData.pays || []).forEach(p => {
+      const centre = _paysCentres[p.code];
+      if (!centre) return;
+      const color = niveauColor[p.niveau] || niveauColor[1];
+      const label = niveauLabel[p.niveau] || '';
+      const radius = 80000 + p.niveau * 120000;
+      L.circle(centre, {
+        color: color, fillColor: color, fillOpacity: 0.55,
+        weight: 2, radius: radius
+      }).addTo(_mapMonde).bindPopup(
+        `<strong>${countryFlag(p.code)} ${p.nom}</strong><br>
+        <span style="color:${color};font-weight:500">${label}</span>`
+      );
+    });
+
+    // Centrer sur pays détecté
+    const userPays = (_geoData.pays || []).find(p => p.code === _userCountryCode);
+    if (userPays && _paysCentres[_userCountryCode]) {
+      _mapMonde.setView(_paysCentres[_userCountryCode], 4);
+    }
+  }
+
+  // Carte France
+  if (!_mapFrance && document.getElementById('map-france')) {
+    _mapFrance = L.map('map-france', {zoomControl:true, scrollWheelZoom:false}).setView([46.5,2.5], 5);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution:'© OpenStreetMap', maxZoom:10
+    }).addTo(_mapFrance);
+
+    (_geoData.regions_france || []).forEach(r => {
+      const centre = _regionsCentres[r.nom];
+      if (!centre) return;
+      const color = niveauColor[r.niveau] || niveauColor[1];
+      const label = niveauLabel[r.niveau] || '';
+      L.circle(centre, {
+        color: color, fillColor: color, fillOpacity: 0.6,
+        weight: 2, radius: 60000 + r.niveau * 40000
+      }).addTo(_mapFrance).bindPopup(
+        `<strong>📍 ${r.nom}</strong><br>
+        <span style="color:${color};font-weight:500">${label}</span>`
+      );
+    });
+  }
+}
+
+function centerMapOn(val) {
+  if (!_mapMonde) return;
+  if (val === '__monde__') {
+    _mapMonde.setView([30, 10], 2);
+  } else if (_paysCentres[val]) {
+    _mapMonde.setView(_paysCentres[val], 4);
+  }
 }
 
 function switchGeoTab(btn, panelId) {
   btn.closest('.card').querySelectorAll('.geo-tab').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
-  btn.closest('.card').querySelectorAll('.geo-panel').forEach(p => p.style.display = 'none');
+  btn.closest('.card').querySelectorAll('[id^="geo-panel-"]').forEach(p => p.style.display = 'none');
   document.getElementById(panelId).style.display = 'block';
+  // Initialiser les cartes après affichage
+  setTimeout(() => {
+    if (_mapMonde) _mapMonde.invalidateSize();
+    if (_mapFrance) _mapFrance.invalidateSize();
+    initMaps();
+  }, 50);
+}
+
+// Charger Leaflet dynamiquement
+function loadLeaflet(cb) {
+  if (window.L) { cb(); return; }
+  const s = document.createElement('script');
+  s.src = 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js';
+  s.onload = cb;
+  document.head.appendChild(s);
 }
 
 function countryFlag(code) {
