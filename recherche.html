@@ -122,13 +122,45 @@ async function doSearch() {
     "originalite":{"score":6,"note":"commentaire court"},
     "intemporalite":{"score":9,"note":"commentaire court"},
     "facilite_internationale":{"score":7,"note":"commentaire court"}
-  }
+  },
+  "densite_geo":{
+    "pays":[
+      {"nom":"France","code":"FR","niveau":5},
+      {"nom":"Belgique","code":"BE","niveau":3},
+      {"nom":"Suisse","code":"CH","niveau":2},
+      {"nom":"Canada","code":"CA","niveau":2},
+      {"nom":"Allemagne","code":"DE","niveau":1}
+    ],
+    "regions_france":[
+      {"nom":"Île-de-France","niveau":4},
+      {"nom":"Auvergne-Rhône-Alpes","niveau":3},
+      {"nom":"Provence-Alpes-Côte d'Azur","niveau":3},
+      {"nom":"Occitanie","niveau":2},
+      {"nom":"Nouvelle-Aquitaine","niveau":2},
+      {"nom":"Grand Est","niveau":2},
+      {"nom":"Hauts-de-France","niveau":2},
+      {"nom":"Bretagne","niveau":2},
+      {"nom":"Normandie","niveau":1},
+      {"nom":"Pays de la Loire","niveau":2},
+      {"nom":"Bourgogne-Franche-Comté","niveau":1},
+      {"nom":"Centre-Val de Loire","niveau":1},
+      {"nom":"Corse","niveau":1}
+    ]
+  },
+  "personnalites":[
+    {"nom":"Prénom Nom","domaine":"Cinéma","pays":"France","description":"1 phrase courte sur cette personnalité"},
+    {"nom":"Prénom Nom","domaine":"Musique","pays":"USA","description":"1 phrase courte"},
+    {"nom":"Prénom Nom","domaine":"Sport","pays":"France","description":"1 phrase courte"},
+    {"nom":"Prénom Nom","domaine":"Politique","pays":"France","description":"1 phrase courte"}
+  ]
 }
-Donne des naissances estimées plausibles en France. Sois factuel.`);
+Pour densite_geo: niveau 1=très rare, 2=rare, 3=modéré, 4=fréquent, 5=très fréquent. Adapte les valeurs réelles au prénom analysé.
+Pour personnalites: cite 4 à 6 vraies personnalités connues portant exactement ce prénom, de domaines variés. Sois factuel.
+Donne des naissances estimées plausibles en France. Sois factuel.`, 1400);
 
     renderResult(d);
   } catch(e) {
-    showError(area);
+    showError(area, e.message);
   }
   btn.disabled = false; btn.textContent = 'Analyser';
 }
@@ -206,7 +238,113 @@ function renderResult(d) {
   ${prochesHTML ? `<div class="card" style="animation:fadeUp .3s .1s ease both">
     <div class="card-label" style="margin-bottom:.75rem">Prénoms similaires</div>
     <div style="display:flex;gap:.5rem;flex-wrap:wrap">${prochesHTML}</div>
-  </div>` : ''}`;
+  </div>` : ''}
+
+  ${renderGeoMap(d)}
+
+  ${renderPersonnalites(d)}`;
+}
+
+// ── Carte de densité géographique ──
+function renderGeoMap(d) {
+  const geo = d.densite_geo;
+  if (!geo) return '';
+
+  const niveauColor = ['','#a8d5a2','#c8e6b0','#f0c040','#e88040','#d94040'];
+  const niveauLabel = ['','Très rare','Rare','Modéré','Fréquent','Très fréquent'];
+
+  const paysHTML = (geo.pays || []).map(p => {
+    const color = niveauColor[p.niveau] || niveauColor[1];
+    const label = niveauLabel[p.niveau] || '';
+    const pct = (p.niveau / 5) * 100;
+    return `<div class="geo-row">
+      <span class="geo-flag">${countryFlag(p.code)}</span>
+      <span class="geo-name">${p.nom}</span>
+      <div class="geo-bar-bg"><div class="geo-bar-fill" style="width:${pct}%;background:${color}"></div></div>
+      <span class="geo-badge" style="background:${color}20;color:${color};border:1px solid ${color}50">${label}</span>
+    </div>`;
+  }).join('');
+
+  const regHTML = (geo.regions_france || []).map(r => {
+    const color = niveauColor[r.niveau] || niveauColor[1];
+    const label = niveauLabel[r.niveau] || '';
+    const pct = (r.niveau / 5) * 100;
+    return `<div class="geo-row">
+      <span class="geo-flag">📍</span>
+      <span class="geo-name">${r.nom}</span>
+      <div class="geo-bar-bg"><div class="geo-bar-fill" style="width:${pct}%;background:${color}"></div></div>
+      <span class="geo-badge" style="background:${color}20;color:${color};border:1px solid ${color}50">${label}</span>
+    </div>`;
+  }).join('');
+
+  const legendeHTML = [1,2,3,4,5].map(n =>
+    `<div class="geo-legend-item"><div class="geo-legend-dot" style="background:${niveauColor[n]}"></div><span>${niveauLabel[n]}</span></div>`
+  ).join('');
+
+  return `<div class="card" style="animation:fadeUp .3s .2s ease both">
+    <div class="card-label" style="margin-bottom:1rem">🗺 Présence géographique</div>
+    <div class="geo-tabs">
+      <button class="geo-tab active" onclick="switchGeoTab(this,'geo-pays')">Par pays</button>
+      <button class="geo-tab" onclick="switchGeoTab(this,'geo-regions')">Régions France</button>
+    </div>
+    <div class="geo-legend">${legendeHTML}</div>
+    <div id="geo-pays" class="geo-panel">${paysHTML}</div>
+    <div id="geo-regions" class="geo-panel" style="display:none">${regHTML}</div>
+  </div>`;
+}
+
+function switchGeoTab(btn, panelId) {
+  btn.closest('.card').querySelectorAll('.geo-tab').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  btn.closest('.card').querySelectorAll('.geo-panel').forEach(p => p.style.display = 'none');
+  document.getElementById(panelId).style.display = 'block';
+}
+
+function countryFlag(code) {
+  if (!code || code.length !== 2) return '🌍';
+  return code.toUpperCase().replace(/./g, c => String.fromCodePoint(0x1F1E6 + c.charCodeAt(0) - 65));
+}
+
+// ── Personnalités connues ──
+function renderPersonnalites(d) {
+  const persos = d.personnalites;
+  if (!persos || !persos.length) return '';
+
+  const domaineIcon = {
+    'Cinéma': '🎬', 'Musique': '🎵', 'Sport': '⚽', 'Politique': '🏛',
+    'Littérature': '📚', 'Sciences': '🔬', 'Art': '🎨', 'Histoire': '⚔',
+    'Théâtre': '🎭', 'Mode': '👗', 'Business': '💼', 'Télévision': '📺'
+  };
+
+  const cardsHTML = persos.map(p => {
+    const icon = domaineIcon[p.domaine] || '⭐';
+    return `<div class="perso-card">
+      <div class="perso-icon">${icon}</div>
+      <div class="perso-body">
+        <div class="perso-nom">${p.nom}</div>
+        <div class="perso-meta">
+          <span class="perso-domaine">${p.domaine}</span>
+          ${p.pays ? `<span class="perso-pays">${countryFlag(isoFromPays(p.pays))} ${p.pays}</span>` : ''}
+        </div>
+        <p class="perso-desc">${p.description}</p>
+      </div>
+    </div>`;
+  }).join('');
+
+  return `<div class="card" style="animation:fadeUp .3s .3s ease both">
+    <div class="card-label" style="margin-bottom:1rem">⭐ Personnalités portant ce prénom</div>
+    <div class="perso-grid">${cardsHTML}</div>
+  </div>`;
+}
+
+function isoFromPays(pays) {
+  const map = {
+    'France':'FR','USA':'US','États-Unis':'US','Belgique':'BE','Suisse':'CH',
+    'Canada':'CA','Allemagne':'DE','Espagne':'ES','Italie':'IT','Royaume-Uni':'GB',
+    'Brésil':'BR','Argentine':'AR','Maroc':'MA','Algérie':'DZ','Portugal':'PT',
+    'Pays-Bas':'NL','Russie':'RU','Japon':'JP','Chine':'CN','Australie':'AU'
+  };
+  return map[pays] || '';
 }
 </script>
 </body>
