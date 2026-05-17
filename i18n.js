@@ -457,6 +457,8 @@ function setPays(code) {
   applyTranslations();
   // Rafraîchir direction si arabe
   document.documentElement.dir = cfg.lang === 'ar' ? 'rtl' : 'ltr';
+  // Notifier les pages du changement de pays
+  window.dispatchEvent(new CustomEvent('paysChanged', { detail: { code, lang: cfg.lang } }));
 }
 
 // ══════════════════════════════════════════════

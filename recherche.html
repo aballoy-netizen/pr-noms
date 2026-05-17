@@ -88,18 +88,20 @@ inp.addEventListener('keydown', e => { if (e.key === 'Enter') doSearch(); });
 
 function qs(name) { inp.value = name; doSearch(); }
 
-// Tags dynamiques selon la langue
-(function() {
+// Tags dynamiques selon la langue — mis à jour au changement de pays
+function refreshTags_rechercheQuickTags() {
   var tagsEl = document.getElementById('rechercheQuickTags');
-  if (tagsEl && typeof getPrenomsSuggeres === 'function') {
-    getPrenomsSuggeres().forEach(function(p) {
-      var b = document.createElement('button');
-      b.className = 'qtag'; b.textContent = p;
-      b.onclick = function() { qs(p); };
-      tagsEl.appendChild(b);
-    });
-  }
-})();
+  if (!tagsEl || typeof getPrenomsSuggeres !== 'function') return;
+  tagsEl.innerHTML = '';
+  getPrenomsSuggeres().forEach(function(p) {
+    var b = document.createElement('button');
+    b.className = 'qtag'; b.textContent = p;
+    b.onclick = function() { qs(p); };
+    tagsEl.appendChild(b);
+  });
+}
+refreshTags_rechercheQuickTags();
+window.addEventListener('paysChanged', refreshTags_rechercheQuickTags);
 
 // Auto-search depuis URL ou localStorage
 const urlQ = getParam('q') || localStorage.getItem('lastPrenom') || '';

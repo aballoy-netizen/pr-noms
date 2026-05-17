@@ -99,18 +99,20 @@ const inp = document.getElementById('tInput');
 inp.addEventListener('keydown', e => { if (e.key === 'Enter') addTrend(); });
 function qa(n) { inp.value = n; addTrend(); }
 
-// Tags dynamiques
-(function() {
+// Tags dynamiques — mis à jour au changement de pays
+function refreshTags_tendancesTags() {
   var tagsEl = document.getElementById('tendancesTags');
-  if (tagsEl && typeof getPrenomsSuggeres === 'function') {
-    getPrenomsSuggeres().forEach(function(p) {
-      var b = document.createElement('button');
-      b.className = 'qtag'; b.textContent = p;
-      b.onclick = function() { qa(p); };
-      tagsEl.appendChild(b);
-    });
-  }
-})();
+  if (!tagsEl || typeof getPrenomsSuggeres !== 'function') return;
+  tagsEl.innerHTML = '';
+  getPrenomsSuggeres().forEach(function(p) {
+    var b = document.createElement('button');
+    b.className = 'qtag'; b.textContent = p;
+    b.onclick = function() { qa(p); };
+    tagsEl.appendChild(b);
+  });
+}
+refreshTags_tendancesTags();
+window.addEventListener('paysChanged', refreshTags_tendancesTags);
 
 // Pré-remplir depuis ?q= ou localStorage (en premier)
 (function() {

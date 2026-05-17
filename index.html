@@ -111,11 +111,12 @@
 <script src="i18n.js"></script>
 <script src="app.js"></script>
 <script>
-// Init dynamique selon la langue
-(function initHome() {
+// Fonction de mise à jour du trending et des quick tags — appelée au chargement ET au changement de pays
+function refreshHomeDynamic() {
   // Quick tags hero
   var tagsEl = document.getElementById('homeQuickTags');
   if (tagsEl && typeof getPrenomsSuggeres === 'function') {
+    tagsEl.innerHTML = '';
     getPrenomsSuggeres().forEach(function(p) {
       var b = document.createElement('button');
       b.className = 'qtag'; b.textContent = p;
@@ -126,6 +127,7 @@
   // Trending row
   var trendEl = document.getElementById('homeTrendingRow');
   if (trendEl && typeof PRENOMS_DEFAUT !== 'undefined') {
+    trendEl.innerHTML = '';
     var lang = window._LANG || 'fr';
     var pd = PRENOMS_DEFAUT[lang] || PRENOMS_DEFAUT['fr'];
     var classes = ['tcol-dot-f','tcol-dot-m','tcol-dot-mx'];
@@ -146,7 +148,10 @@
       trendEl.appendChild(g);
     });
   }
-})();
+}
+refreshHomeDynamic();
+// Écouter les changements de pays
+window.addEventListener('paysChanged', refreshHomeDynamic);
 
 function quickSearch() {
   const q = document.getElementById('quickInput').value.trim();

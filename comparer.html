@@ -88,18 +88,20 @@ const inp = document.getElementById('addInput');
 inp.addEventListener('keydown', e => { if (e.key === 'Enter') addPrenom(); });
 function quickAdd(n) { inp.value = n; addPrenom(); }
 
-// Tags dynamiques selon la langue
-(function() {
+// Tags dynamiques selon la langue — mis à jour au changement de pays
+function refreshTags_comparerTags() {
   var tagsEl = document.getElementById('comparerTags');
-  if (tagsEl && typeof getPrenomsSuggeres === 'function') {
-    getPrenomsSuggeres().forEach(function(p) {
-      var b = document.createElement('button');
-      b.className = 'qtag'; b.textContent = p;
-      b.onclick = function() { quickAdd(p); };
-      tagsEl.appendChild(b);
-    });
-  }
-})();
+  if (!tagsEl || typeof getPrenomsSuggeres !== 'function') return;
+  tagsEl.innerHTML = '';
+  getPrenomsSuggeres().forEach(function(p) {
+    var b = document.createElement('button');
+    b.className = 'qtag'; b.textContent = p;
+    b.onclick = function() { quickAdd(p); };
+    tagsEl.appendChild(b);
+  });
+}
+refreshTags_comparerTags();
+window.addEventListener('paysChanged', refreshTags_comparerTags);
 
 // Pré-remplir depuis ?q= ou localStorage (en premier)
 (function() {
