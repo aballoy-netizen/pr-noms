@@ -77,13 +77,14 @@
 let mode = 'annee', genre = 'all';
 
 const years = [];
-for (let y = 2024; y >= 1970; y--) years.push(y);
+const currentYear = new Date().getFullYear();
+for (let y = currentYear; y >= 1970; y--) years.push(y);
 ['anneeSelect','deSelect','aSelect'].forEach(id => {
   const sel = document.getElementById(id);
   years.forEach(y => { const o = document.createElement('option'); o.value = y; o.textContent = y; sel.appendChild(o); });
 });
-document.getElementById('aSelect').value = 2024;
-document.getElementById('deSelect').value = 2015;
+document.getElementById('aSelect').value = currentYear;
+document.getElementById('deSelect').value = currentYear - 5;
 
 function setMode(m) {
   mode = m;
@@ -120,9 +121,9 @@ async function doClassement() {
   const genreLabel = genre === 'f' ? 'féminins uniquement' : genre === 'm' ? 'masculins uniquement' : 'mixte (filles et garçons)';
 
   try {
-    const data = await callClaude(`TOP 20 des prénoms ${genreLabel} en France pour ${from === to ? 'l\'année ' + from : 'la période ' + from + '–' + to}. UNIQUEMENT JSON sans markdown:
+    const data = await callClaude(`TOP 20 des prénoms ${genreLabel} en France pour ${from === to ? 'l\'année ' + from : 'la période ' + from + '–' + to}. Nous sommes en ${new Date().getFullYear()}, utilise les données les plus récentes disponibles. UNIQUEMENT JSON sans markdown:
 {"periode":"${periodLabel}","prenoms":[{"rang":1,"prenom":"Nom","genre":"féminin|masculin","origine":"ex:latin","naissances":8500,"tendance":"montant|stable|déclinant","variation":0}]}
-Exactement 20 entrées. variation = évolution rang vs période précédente. Sois historiquement réaliste.`, 1400);
+Exactement 20 entrées. variation = évolution rang vs période précédente (positif=progression, négatif=recul). Sois historiquement réaliste.`, 2000);
     renderClassement(data, periodLabel);
   } catch(e) { showError(area); }
   btn.disabled = false; btn.textContent = 'Voir le classement →';
