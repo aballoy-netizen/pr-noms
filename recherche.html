@@ -102,7 +102,7 @@ function refreshSidebarTrends() {
   var pd = (typeof PRENOMS_DEFAUT !== 'undefined' && PRENOMS_DEFAUT[lang]) ? PRENOMS_DEFAUT[lang] : null;
   var prenoms = pd ? pd.filles.slice(0,3).concat(pd.garcons.slice(0,3)) : ['Alma','Gabriel','Léonie','Raphaël','Adèle','Malo'];
   el.innerHTML = prenoms.map(function(p) {
-    return '<a class="sidebar-link" href="?q=' + encodeURIComponent(p) + '" onclick="qs('' + p + '');return false">' + p + '</a>';
+    return '<a class="sidebar-link" href="?q=' + encodeURIComponent(p) + '" onclick="qs(this.dataset.p);return false" data-p="' + p + '">' + p + '</a>';
   }).join('');
   // Mettre à jour le titre
   var title = document.getElementById('sidebarTrendTitle');
@@ -366,7 +366,7 @@ function renderGeoMap(d) {
   const niveauLabel = ['','Très rare','Rare','Modéré','Fréquent','Très fréquent'];
 
   const paysList = (geo.pays || []).map(p =>
-    `<option value="${p.code}" ${p.code === _userCountryCode ? 'selected' : ''}>${countryFlag(p.code)} ${p.nom}</option>`
+    `<option value="${p.code}" ${p.code === (window._PAYS_CODE || _userCountryCode) ? 'selected' : ''}>${countryFlag(p.code)} ${p.nom}</option>`
   ).join('');
 
   const legendeHTML = `<div class="geo-legend-inline">
@@ -435,10 +435,9 @@ function initMaps() {
     });
 
     // Centrer sur pays détecté
-    const userPays = (_geoData.pays || []).find(p => p.code === _userCountryCode);
-    if (userPays && _paysCentres[_userCountryCode]) {
-      _mapMonde.setView(_paysCentres[_userCountryCode], 4);
-    }
+    const centreCode = (window._PAYS_CODE && _paysCentres[window._PAYS_CODE]) ? window._PAYS_CODE
+                   : (_userCountryCode && _paysCentres[_userCountryCode]) ? _userCountryCode : 'FR';
+    _mapMonde.setView(_paysCentres[centreCode] || [30, 10], _paysCentres[centreCode] ? 4 : 2);
   }
 
   // Carte France
