@@ -8,8 +8,10 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
 <link rel="stylesheet" href="styles.css">
 <style>
-#map-monde, #map-france { height: 340px; border-radius: var(--radius); overflow: hidden; margin-bottom: .75rem; }
-.leaflet-popup-content { font-family: 'DM Sans', sans-serif; font-size: .85rem; }
+#map-monde, #map-france { height: 300px; border-radius: var(--radius); overflow: hidden; margin-bottom: .75rem; }
+.leaflet-popup-content { font-family: 'DM Sans', sans-serif; font-size: .85rem; line-height: 1.5; }
+.geo-legend-inline { display: flex; flex-wrap: wrap; gap: .35rem; margin-bottom: .75rem; }
+.geo-legend-pill { font-size: .6rem; font-weight: 500; letter-spacing: .07em; text-transform: uppercase; padding: .2rem .6rem; border-radius: 50px; white-space: nowrap; }
 </style>
 </head>
 <body>
@@ -130,26 +132,26 @@ async function doSearch() {
   },
   "densite_geo":{
     "pays":[
-      {"nom":"France","code":"FR","niveau":5},
-      {"nom":"Belgique","code":"BE","niveau":3},
-      {"nom":"Suisse","code":"CH","niveau":2},
-      {"nom":"Canada","code":"CA","niveau":2},
-      {"nom":"Allemagne","code":"DE","niveau":1}
+      {"nom":"France","code":"FR","niveau":5,"nb_porteurs":45000},
+      {"nom":"Belgique","code":"BE","niveau":3,"nb_porteurs":3500},
+      {"nom":"Suisse","code":"CH","niveau":2,"nb_porteurs":1200},
+      {"nom":"Canada","code":"CA","niveau":2,"nb_porteurs":2000},
+      {"nom":"Allemagne","code":"DE","niveau":1,"nb_porteurs":500}
     ],
     "regions_france":[
-      {"nom":"Île-de-France","niveau":4},
-      {"nom":"Auvergne-Rhône-Alpes","niveau":3},
-      {"nom":"Provence-Alpes-Côte d'Azur","niveau":3},
-      {"nom":"Occitanie","niveau":2},
-      {"nom":"Nouvelle-Aquitaine","niveau":2},
-      {"nom":"Grand Est","niveau":2},
-      {"nom":"Hauts-de-France","niveau":2},
-      {"nom":"Bretagne","niveau":2},
-      {"nom":"Normandie","niveau":1},
-      {"nom":"Pays de la Loire","niveau":2},
-      {"nom":"Bourgogne-Franche-Comté","niveau":1},
-      {"nom":"Centre-Val de Loire","niveau":1},
-      {"nom":"Corse","niveau":1}
+      {"nom":"Île-de-France","niveau":4,"nb_porteurs":9000},
+      {"nom":"Auvergne-Rhône-Alpes","niveau":3,"nb_porteurs":5000},
+      {"nom":"Provence-Alpes-Côte d'Azur","niveau":3,"nb_porteurs":4000},
+      {"nom":"Occitanie","niveau":2,"nb_porteurs":3000},
+      {"nom":"Nouvelle-Aquitaine","niveau":2,"nb_porteurs":3200},
+      {"nom":"Grand Est","niveau":2,"nb_porteurs":2800},
+      {"nom":"Hauts-de-France","niveau":2,"nb_porteurs":2900},
+      {"nom":"Bretagne","niveau":2,"nb_porteurs":2200},
+      {"nom":"Normandie","niveau":1,"nb_porteurs":1800},
+      {"nom":"Pays de la Loire","niveau":2,"nb_porteurs":2400},
+      {"nom":"Bourgogne-Franche-Comté","niveau":1,"nb_porteurs":1500},
+      {"nom":"Centre-Val de Loire","niveau":1,"nb_porteurs":1400},
+      {"nom":"Corse","niveau":1,"nb_porteurs":400}
     ]
   },
   "personnalites":[
@@ -332,9 +334,11 @@ function renderGeoMap(d) {
     `<option value="${p.code}" ${p.code === _userCountryCode ? 'selected' : ''}>${countryFlag(p.code)} ${p.nom}</option>`
   ).join('');
 
-  const legendeHTML = [1,2,3,4,5].map(n =>
-    `<div class="geo-legend-item"><div class="geo-legend-dot" style="background:${niveauColor[n]}"></div><span>${niveauLabel[n]}</span></div>`
-  ).join('');
+  const legendeHTML = `<div class="geo-legend-inline">
+    ${[1,2,3,4,5].map(n =>
+      `<span class="geo-legend-pill" style="background:${niveauColor[n]}20;border:1px solid ${niveauColor[n]}80;color:${niveauColor[n] === '#f0c040' ? '#8a6a00' : niveauColor[n]}">${niveauLabel[n]}</span>`
+    ).join('')}
+  </div>`;
 
   const listPaysHTML = buildPaysHTML(geo.pays, niveauColor, niveauLabel);
   const listRegHTML = buildRegHTML(geo.regions_france, niveauColor, niveauLabel);
@@ -384,13 +388,14 @@ function initMaps() {
       if (!centre) return;
       const color = niveauColor[p.niveau] || niveauColor[1];
       const label = niveauLabel[p.niveau] || '';
-      const radius = 80000 + p.niveau * 120000;
+      const radius = 15000 + p.niveau * 25000;
+      const nb = p.nb_porteurs ? `<br><span style="font-size:.8rem;color:var(--ink-3)">~${Number(p.nb_porteurs).toLocaleString('fr-FR')} porteurs estimés</span>` : '';
       L.circle(centre, {
-        color: color, fillColor: color, fillOpacity: 0.55,
-        weight: 2, radius: radius
+        color: color, fillColor: color, fillOpacity: 0.6,
+        weight: 1.5, radius: radius
       }).addTo(_mapMonde).bindPopup(
         `<strong>${countryFlag(p.code)} ${p.nom}</strong><br>
-        <span style="color:${color};font-weight:500">${label}</span>`
+        <span style="color:${color};font-weight:600">${label}</span>${nb}`
       );
     });
 
@@ -413,12 +418,13 @@ function initMaps() {
       if (!centre) return;
       const color = niveauColor[r.niveau] || niveauColor[1];
       const label = niveauLabel[r.niveau] || '';
+      const nb = r.nb_porteurs ? `<br><span style="font-size:.8rem;color:var(--ink-3)">~${Number(r.nb_porteurs).toLocaleString('fr-FR')} porteurs estimés</span>` : '';
       L.circle(centre, {
-        color: color, fillColor: color, fillOpacity: 0.6,
-        weight: 2, radius: 60000 + r.niveau * 40000
+        color: color, fillColor: color, fillOpacity: 0.65,
+        weight: 1.5, radius: 20000 + r.niveau * 15000
       }).addTo(_mapFrance).bindPopup(
         `<strong>📍 ${r.nom}</strong><br>
-        <span style="color:${color};font-weight:500">${label}</span>`
+        <span style="color:${color};font-weight:600">${label}</span>${nb}`
       );
     });
   }
