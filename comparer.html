@@ -92,6 +92,12 @@ const inp = document.getElementById('addInput');
 inp.addEventListener('keydown', e => { if (e.key === 'Enter') addPrenom(); });
 function quickAdd(n) { inp.value = n; addPrenom(); }
 
+// Pré-remplir depuis ?q=
+(function() {
+  var q = new URLSearchParams(window.location.search).get('q');
+  if (q) { inp.value = q; addPrenom(); }
+})();
+
 function updateSlots() {
   const si = document.getElementById('slotsInfo');
   if (!prenoms.length) { si.textContent = ''; return; }

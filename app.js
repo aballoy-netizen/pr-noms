@@ -136,3 +136,25 @@ function cap(str) {
   if (!str) return '';
   return str.charAt(0).toUpperCase() + str.slice(1);
 }
+
+// ── Transmission du prénom entre les onglets ──
+function updateNavLinks(prenom) {
+  if (!prenom) return;
+  document.querySelectorAll('.nav-link, .logo').forEach(link => {
+    try {
+      var url = new URL(link.href, window.location.origin);
+      if (url.pathname.endsWith('.html') && !url.pathname.includes('premium')) {
+        url.searchParams.set('q', prenom);
+        link.href = url.toString();
+      }
+    } catch(e) {}
+  });
+}
+
+// Lire ?q= au chargement et pré-remplir les champs de la page
+(function() {
+  var q = new URLSearchParams(window.location.search).get('q');
+  if (!q) return;
+  // Stocker pour les pages qui en ont besoin
+  window._prenomTransmis = q;
+})();

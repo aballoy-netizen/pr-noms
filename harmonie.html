@@ -206,6 +206,15 @@ function swapPrenom(name) {
   const inp = document.querySelector('#prenomList .form-input');
   if (inp) { inp.value = name; doAnalyse(); }
 }
+
+// Pré-remplir depuis ?q=
+(function() {
+  var q = new URLSearchParams(window.location.search).get('q');
+  if (q) {
+    var inp = document.querySelector('#prenomList .form-input');
+    if (inp) inp.value = q;
+  }
+})();
 </script>
 </body>
 </html>

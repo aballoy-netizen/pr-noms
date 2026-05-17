@@ -104,6 +104,12 @@ const inp = document.getElementById('tInput');
 inp.addEventListener('keydown', e => { if (e.key === 'Enter') addTrend(); });
 function qa(n) { inp.value = n; addTrend(); }
 
+// Pré-remplir depuis ?q=
+(function() {
+  var q = new URLSearchParams(window.location.search).get('q');
+  if (q) { inp.value = q; addTrend(); }
+})();
+
 function clearAll() {
   datasets = [];
   if (chartInst) { chartInst.destroy(); chartInst = null; }
