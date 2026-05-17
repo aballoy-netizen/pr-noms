@@ -54,7 +54,7 @@ exports.handler = async function(event, context) {
   }
 
   const payload = JSON.stringify({
-    model: requestBody.model || 'claude-sonnet-4-20250514',
+    model: requestBody.model || 'claude-sonnet-4-5',
     max_tokens: requestBody.max_tokens || 1000,
     messages: requestBody.messages
   });

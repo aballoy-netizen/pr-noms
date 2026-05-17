@@ -13,12 +13,12 @@
   <a class="logo" href="index.html">Pré<span>noms</span></a>
   <button class="nav-burger" onclick="toggleMenu()"><span></span><span></span><span></span></button>
   <div class="nav-links" id="navLinks">
-    <a class="nav-link" href="recherche.html">Rechercher</a>
-    <a class="nav-link" href="comparer.html">Comparer</a>
-    <a class="nav-link active" href="classement.html">Classement</a>
-    <a class="nav-link" href="tendances.html">Tendances</a>
-    <a class="nav-link" href="harmonie.html">Harmonie</a>
-    <a class="nav-link" href="sondage.html">Sondage</a>
+    <a class="nav-link" href="recherche.html" data-i18n="rechercher">Rechercher</a>
+    <a class="nav-link" href="comparer.html" data-i18n="comparer">Comparer</a>
+    <a class="nav-link active" href="classement.html" data-i18n="classement">Classement</a>
+    <a class="nav-link" href="tendances.html" data-i18n="tendances">Tendances</a>
+    <a class="nav-link" href="harmonie.html" data-i18n="harmonie">Harmonie</a>
+    <a class="nav-link" href="sondage.html" data-i18n="sondage">Sondage</a>
     <a class="nav-link nav-premium" href="premium.html">✦ Premium</a>
   </div>
 </div></nav>
@@ -72,6 +72,7 @@
   </div>
 </div>
 
+<script src="i18n.js"></script>
 <script src="app.js"></script>
 <script>
 let mode = 'annee', genre = 'all';
@@ -121,7 +122,7 @@ async function doClassement() {
   const genreLabel = genre === 'f' ? 'féminins uniquement' : genre === 'm' ? 'masculins uniquement' : 'mixte (filles et garçons)';
 
   try {
-    const data = await callClaude(`TOP 20 des prénoms ${genreLabel} en France pour ${from === to ? 'l\'année ' + from : 'la période ' + from + '–' + to}. Nous sommes en ${new Date().getFullYear()}, utilise les données les plus récentes disponibles. UNIQUEMENT JSON sans markdown:
+    const data = await callClaude(`${getLangInstruction()} TOP 20 des prénoms ${genreLabel} pour ${from === to ? 'l\'année ' + from : 'la période ' + from + '–' + to} dans le pays sélectionné. Nous sommes en ${new Date().getFullYear()}. UNIQUEMENT JSON sans markdown:
 {"periode":"${periodLabel}","prenoms":[{"rang":1,"prenom":"Nom","genre":"féminin|masculin","origine":"ex:latin","naissances":8500,"tendance":"montant|stable|déclinant","variation":0}]}
 Exactement 20 entrées. variation = évolution rang vs période précédente (positif=progression, négatif=recul). Sois historiquement réaliste.`, 2000);
     renderClassement(data, periodLabel);

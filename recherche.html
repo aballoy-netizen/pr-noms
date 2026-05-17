@@ -88,6 +88,7 @@
   </aside>
 </div>
 
+<script src="i18n.js"></script>
 <script src="app.js"></script>
 <script>
 const inp = document.getElementById('searchInput');
@@ -108,7 +109,7 @@ async function doSearch() {
   showLoading(area, `Analyse de « ${q} » en cours…`);
 
   try {
-    const d = await callClaude(`Tu es une encyclopédie experte des prénoms. Analyse le prénom "${q}" et réponds UNIQUEMENT en JSON valide sans markdown ni backticks:
+    const d = await callClaude(`${getLangInstruction()} Tu es une encyclopédie experte des prénoms. Analyse le prénom "${q}" et réponds UNIQUEMENT en JSON valide sans markdown ni backticks:
 {
   "prenom":"forme officielle",
   "genre":"féminin|masculin|mixte",
