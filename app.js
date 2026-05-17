@@ -86,15 +86,22 @@ function showError(container, msg) {
 }
 
 function genderBadge(genre) {
-  var map = { 'féminin': ['badge-f','♀ Féminin'], 'masculin': ['badge-m','♂ Masculin'], 'mixte': ['badge-mx','⚥ Mixte'] };
-  var pair = map[genre] || ['badge-neutral', genre || '—'];
-  return '<span class="badge ' + pair[0] + '">' + pair[1] + '</span>';
+  var norm = (genre || '').toLowerCase();
+  var _t = typeof t !== 'undefined' ? t : function(k) { return k; };
+  if (norm.includes('fémin') || norm.includes('femin') || norm.includes('female') || norm === 'f') return '<span class="badge badge-f">' + _t('badge_feminine') + '</span>';
+  if (norm.includes('mascul') || norm.includes('male') || norm === 'm') return '<span class="badge badge-m">' + _t('badge_masculin') + '</span>';
+  if (norm.includes('mixt') || norm.includes('mixed')) return '<span class="badge badge-mx">' + _t('badge_mixte') + '</span>';
+  return '<span class="badge badge-neutral">' + (genre || '—') + '</span>';
 }
 
 function trendBadge(tendance) {
-  var map = { 'montant': ['badge-up','↑ En hausse'], 'déclinant': ['badge-dn','↓ Déclinant'], 'stable': ['badge-st','→ Stable'] };
-  var pair = map[tendance] || ['badge-st', tendance || '—'];
-  return '<span class="badge ' + pair[0] + '">' + pair[1] + '</span>';
+  var norm = (tendance || '').toLowerCase();
+  var _t = typeof t !== 'undefined' ? t : function(k) { return k; };
+  var up = ['montant','rising','steigend','alza','alta','crescita','ارتفاع','上升','बढ़'];
+  var dn = ['déclinant','declin','rückläufig','queda','calo','انخفاض','下降','घट'];
+  if (up.some(function(x) { return norm.includes(x); })) return '<span class="badge badge-up">' + _t('badge_montant') + '</span>';
+  if (dn.some(function(x) { return norm.includes(x); })) return '<span class="badge badge-dn">' + _t('badge_declinant') + '</span>';
+  return '<span class="badge badge-st">' + _t('badge_stable') + '</span>';
 }
 
 function scoreBar(label, score) {
@@ -118,9 +125,11 @@ function sparklineRow(year, value, max) {
 }
 
 function gateHTML(title, desc) {
-  title = title || '✦ Rapport Premium complet';
-  desc = desc || 'Accédez à toutes les fonctionnalités avancées.';
-  return '<div class="gate"><div class="gate-text"><strong>' + title + '</strong>' + desc + '</div><button class="gate-btn" onclick="window.location.href=\'premium.html\'">Débloquer</button></div>';
+  var _t = typeof t !== 'undefined' ? t : function(k) { return k; };
+  title = title || _t('premium_gate') || '✦ Rapport Premium complet';
+  desc = desc || _t('premium_gate_desc') || 'Accédez à toutes les fonctionnalités avancées.';
+  var btn = _t('debloquer') || 'Débloquer';
+  return '<div class="gate"><div class="gate-text"><strong>' + title + '</strong> ' + desc + '</div><button class="gate-btn" onclick="window.location.href=\'premium.html\'">' + btn + '</button></div>';
 }
 
 function cap(str) {
